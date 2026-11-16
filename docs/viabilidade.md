@@ -98,6 +98,10 @@ Parou na época 22 por paciência 15. O melhor ponto da validação foi restaura
 
 No teste de 449 fotos, esse peso ficou em mAP@50 0,952 e mAP@50-95 0,775. O recall geral subiu de 0,835 para 0,871. S passou de recall 0,28 para 1,00. N continua em 0. U continua perto de 0,38. A demo segue com o peso das 5 épocas (`models\libras15_yolo26n.pt`), porque o mAP mais estrito do teste não melhorou.
 
+## Baseline sem treino nas letras
+
+O mesmo YOLO26n pré-treinado no COCO, sem fine-tuning, rodou nas 449 fotos de teste (`scripts/baseline_coco.py`). Em **0** fotos o nome da classe coincidiu com a letra. Em 410 fotos houve alguma caixa: 407 vezes a classe `person`. O treino customizado é o que cria as letras.
+
 ## Demo já exercitada
 
 Um vídeo montado só com fotos de teste de D, E, D e O (`D:\citizentech\cv\video\prova_dedo.mp4`) passou pela demo. O texto acumulado foi `dedo`. A saída anotada está em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`. No trecho final a tela marcou cerca de 42 FPS de processamento. O começo marca menos porque a medida ainda inclui a carga do modelo.

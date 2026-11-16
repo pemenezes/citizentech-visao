@@ -10,14 +10,16 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=5)
     parser.add_argument("--name", default="yolo26n_e5")
     parser.add_argument("--patience", type=int, default=20)
+    parser.add_argument("--modelo", default=r"D:\citizentech\cv\models\yolo26n.pt")
+    parser.add_argument("--batch", type=int, default=16)
     args = parser.parse_args()
 
-    model = YOLO(r"D:\citizentech\cv\models\yolo26n.pt")
+    model = YOLO(args.modelo)
     model.train(
         data=r"D:\citizentech\cv\data\processed\libras15_passos\data.yaml",
         epochs=args.epochs,
         imgsz=640,
-        batch=16,
+        batch=args.batch,
         cache="ram",
         workers=0,
         amp=True,
