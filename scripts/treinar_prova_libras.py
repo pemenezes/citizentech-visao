@@ -1,13 +1,21 @@
-"""Treino curto de viabilidade. Não é o treino final."""
+"""Treino do YOLO26n nas 15 letras públicas. Ajuste épocas pela linha de comando."""
+
+import argparse
 
 from ultralytics import YOLO
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--name", default="yolo26n_e5")
+    parser.add_argument("--patience", type=int, default=20)
+    args = parser.parse_args()
+
     model = YOLO(r"D:\citizentech\cv\models\yolo26n.pt")
     model.train(
         data=r"D:\citizentech\cv\data\processed\libras15_passos\data.yaml",
-        epochs=5,
+        epochs=args.epochs,
         imgsz=640,
         batch=16,
         cache="ram",
@@ -16,12 +24,12 @@ def main() -> None:
         seed=42,
         deterministic=True,
         device=0,
-        project=r"D:\citizentech\cv\runs\viabilidade",
-        name="yolo26n_e5",
+        project=r"D:\citizentech\cv\runs",
+        name=args.name,
         exist_ok=True,
         pretrained=True,
-        patience=20,
-        close_mosaic=0,
+        patience=args.patience,
+        close_mosaic=10,
         plots=True,
         val=True,
         verbose=True,

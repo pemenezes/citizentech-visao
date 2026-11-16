@@ -10,6 +10,8 @@ Componente de visão do produto CitizenTech. O tema em construção é o alfabet
 
 Disciplina Applied Computer Vision, FIAP, Global Solution 2026.2.
 
+Repositório: https://github.com/pemenezes/citizentech-visao
+
 ## Ambiente
 
 Tudo que o projeto baixa (venv, caches, dados, pesos, treinos, vídeo) fica em `D:\citizentech\cv`. Este repositório é só `D:\citizentech\cv\repo`.
