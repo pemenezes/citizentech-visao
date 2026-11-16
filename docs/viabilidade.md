@@ -92,6 +92,12 @@ N não foi recuperada nenhuma vez nessas 16 fotos. Com limiar 0,25, 13 delas nem
 
 Inferência em arquivo, lote 1, 640 px, 100 fotos do teste depois de 10 de aquecimento: **49,6 FPS**, 20 ms por foto. Isso não inclui abrir a câmera. Pico de VRAM nessa medição: 506 MiB.
 
+## Rodada de 40 épocas (16/11, de manhã)
+
+Parou na época 22 por paciência 15. O melhor ponto da validação foi restaurado: precisão 0,978, recall 0,939, mAP@50 0,990, mAP@50-95 0,830, em 0,414 h. Saída: `D:\citizentech\cv\runs\yolo26n_e40`.
+
+No teste de 449 fotos, esse peso ficou em mAP@50 0,952 e mAP@50-95 0,775. O recall geral subiu de 0,835 para 0,871. S passou de recall 0,28 para 1,00. N continua em 0. U continua perto de 0,38. A demo segue com o peso das 5 épocas (`models\libras15_yolo26n.pt`), porque o mAP mais estrito do teste não melhorou.
+
 ## Demo já exercitada
 
 Um vídeo montado só com fotos de teste de D, E, D e O (`D:\citizentech\cv\video\prova_dedo.mp4`) passou pela demo. O texto acumulado foi `dedo`. A saída anotada está em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`. No trecho final a tela marcou cerca de 42 FPS de processamento. O começo marca menos porque a medida ainda inclui a carga do modelo.
