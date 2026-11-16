@@ -1,0 +1,10 @@
+# Caminhos do projeto. Scripts devem preferir a variável CV_DATA_DIR
+# (definida em scripts/env.ps1) quando ela existir.
+root: D:/citizentech/cv
+data: D:/citizentech/cv/data
+raw: D:/citizentech/cv/data/raw
+processed: D:/citizentech/cv/data/processed
+models: D:/citizentech/cv/models
+runs: D:/citizentech/cv/runs
+video: D:/citizentech/cv/video
+cache: D:/citizentech/cv/cache

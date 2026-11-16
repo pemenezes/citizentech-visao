@@ -1,0 +1,23 @@
+.env
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Dados, treinos e pesos ficam no D:, fora deste repositório.
+# Se alguém copiar para dentro do repo, não versionar.
+data/
+runs/
+video/
+*.pt
+*.onnx
+*.engine
+*.weights
+
+Thumbs.db
+Desktop.ini
+.DS_Store
