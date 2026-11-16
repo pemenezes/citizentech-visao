@@ -98,6 +98,12 @@ Parou na época 22 por paciência 15. O melhor ponto da validação foi restaura
 
 No teste de 449 fotos, esse peso ficou em mAP@50 0,952 e mAP@50-95 0,775. O recall geral subiu de 0,835 para 0,871. S passou de recall 0,28 para 1,00. N continua em 0. U continua perto de 0,38. A demo segue com o peso das 5 épocas (`models\libras15_yolo26n.pt`), porque o mAP mais estrito do teste não melhorou.
 
+## YOLO26s no mesmo teste (16/11)
+
+Rodada de até 40 épocas, lote 8, paciência 15. Parou na época 26. O melhor ponto da validação foi a época 11: precisão 0,939, recall 0,928, mAP@50 0,989, mAP@50-95 0,829. Tempo acumulado: 2.547 s. VRAM de treino cerca de 2,4 GB. Saída: `D:\citizentech\cv\runs\yolo26s_e40`.
+
+No teste de 449 fotos, o s ficou em precisão 0,815, recall 0,846, mAP@50 0,950 e mAP@50-95 0,793. A inferência no validador foi de 7,5 ms por foto, contra 3,3 ms do n. O s recupera a letra N (recall 0,80), que o n deixou em zero, e perde precisão: marca mais letras erradas. A demo continua no n.
+
 ## Baseline sem treino nas letras
 
 O mesmo YOLO26n pré-treinado no COCO, sem fine-tuning, rodou nas 449 fotos de teste (`scripts/baseline_coco.py`). Em **0** fotos o nome da classe coincidiu com a letra. Em 410 fotos houve alguma caixa: 407 vezes a classe `person`. O treino customizado é o que cria as letras.
