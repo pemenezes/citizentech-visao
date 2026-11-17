@@ -112,6 +112,22 @@ O mesmo YOLO26n pré-treinado no COCO, sem fine-tuning, rodou nas 449 fotos de t
 
 Um vídeo montado só com fotos de teste de D, E, D e O (`D:\citizentech\cv\video\prova_dedo.mp4`) passou pela demo. O texto acumulado foi `dedo`. A saída anotada está em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`. No trecho final a tela marcou cerca de 42 FPS de processamento. O começo marca menos porque a medida ainda inclui a carga do modelo.
 
-## O que falta para um GO
+## Vídeo do celular (16/11)
 
-Um vídeo do celular, mão direita, sem rosto, com as letras paradas. Aí entra uma amostra pequena no treino e o resto fica de fora, para medir o acerto de verdade. Se esse acerto ficar abaixo de 60%, o plano B passa a valer.
+Os 18 clipes estão em `D:\citizentech\cv\video\pedro`. São curtos, de 2 a 12 segundos, mão direita, parede branca, sem rosto. O começo de cada clipe ainda tem a mão aberta e ficou de fora. A amostra de treino é o primeiro trecho estável. O teste é o trecho seguinte, com uma folga no meio. As duas tomadas de C foram separadas: `c_1` treina e `c_2` testa.
+
+Antes de misturar essa amostra, o YOLO26n das 40 épocas acertou 61 de 196 quadros do teste (31%). Depois do ajuste, o peso da época 9 acertou 186 de 196 (95%). Por letra: A 8/15, B 16/16, C 34/34, E 15/15, F 12/12, L 15/15, M 12/12, N 7/7, O 40/40, R 10/10, S 8/8, U 9/9, V 0/3. A validação pública preferiu a época 1, que acerta 154 de 196 (79%) no mesmo teste. A demo usa a época 9 (`models\libras16_pedro_yolo26n.pt`). No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
+
+No teste público de 449 fotos, esse peso da época 9 ficou em mAP@50 0,828. O S público caiu para recall 0,06. O ganho no celular e a perda no S das fotos antigas andam juntos.
+
+Nessa primeira amostra ficaram de fora do treino, com o arquivo guardado: `g_1` e `g_2`, porque a pose estável é a da letra L; `h`, porque é letra de movimento e o quadro parado parece U. O I daquele clipe era o indicador, e o I de Libras é o mínimo. D e W ainda não tinham vídeo.
+
+## Segunda amostra do celular (16/11, à noite)
+
+Chegaram clipes novos de D, G, I, V e W, em retrato 1080×1920. O I novo tem a ponta do dedo do lado oposto ao indicador do D, então entrou como mínimo. O V é o sinal de dois dedos e o W é três dedos para cima. O G novo continua com indicador para cima e polegar para o lado, a pose do L, e ficou de fora outra vez. H continua de fora.
+
+O conjunto de teste do celular passou a 269 quadros. O peso da primeira amostra acertou 188 de 269 (70%) nesse conjunto novo: D 0/19, I 0/24, V 1/19, W 1/14, e O ainda 40/40. O ajuste de 12 épocas, partindo de `models\libras16_pedro_yolo26n.pt`, parou com as 12 épocas completas. A validação pública escolheu a época 9 (mAP@50-95 0,851). Saída: `D:\citizentech\cv\runs\yolo26n_pedro2_e12`.
+
+Esse peso, copiado para `models\libras16_pedro2_yolo26n.pt`, acertou 200 de 269 (74%). Por letra: A 8/15, B 16/16, C 34/34, D 0/19, E 15/15, F 12/12, I 8/24, L 15/15, M 12/12, N 7/7, O 15/40, R 10/10, S 8/8, U 9/9, V 17/19, W 14/14. O peso da época 12 acertou 199 de 269. D ficou em zero: 14 quadros lidos como V e 5 como L. O fim do clipe de D é o indicador em pé, diferente do trecho de treino. I teve 16 erros lidos como D. O caiu de 40/40 para 15/40, com os 25 erros lidos como D.
+
+No teste público de 449 fotos, o mesmo peso ficou em precisão 0,909, recall 0,912, mAP@50 0,942 e mAP@50-95 0,821. S voltou a recall 1,00. N ficou em recall 0,515. U ficou em recall 0,333. Inferência no validador: 4,0 ms. A demo usa esse peso. No vídeo `prova_dedo.mp4` o texto continuou `dedo`. A saída anotada desta conferência está em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.

@@ -1,6 +1,6 @@
 # Visão computacional — CitizenTech (FIAP Global Solution 2026.2)
 
-Componente de visão do produto CitizenTech. O tema em construção é o alfabeto manual de Libras (soletração, não a língua inteira). O teste com o vídeo do celular ainda não foi feito. Ver `docs/escopo.md`.
+Componente de visão do produto CitizenTech. O tema é o alfabeto manual de Libras (soletração, não a língua inteira). O teste com o vídeo do celular está em `docs/viabilidade.md`. Ver `docs/escopo.md`.
 
 ## Grupo
 
@@ -31,7 +31,7 @@ O ambiente virtual já criado é `D:\citizentech\cv\envs\cv` (Python 3.12). PyTo
 
 ## Demo
 
-O peso desta prova está em `D:\citizentech\cv\models\libras15_yolo26n.pt` (YOLO26n, 15 letras, 5 épocas). A letra só entra na palavra depois de 8 quadros, numa janela de 12, com confiança de pelo menos 0,60. Abaixo disso a tela mostra "incerto".
+O peso desta prova está em `D:\citizentech\cv\models\libras16_pedro2_yolo26n.pt` (YOLO26n ajustado com a segunda amostra do celular). O arquivo anterior, `libras16_pedro_yolo26n.pt`, permanece no mesmo diretório. A letra só entra na palavra depois de 8 quadros, numa janela de 12, com confiança de pelo menos 0,60. Abaixo disso a tela mostra "incerto".
 
 ```powershell
 . D:\citizentech\cv\repo\scripts\env.ps1
@@ -46,14 +46,8 @@ python D:\citizentech\cv\repo\src\demo\app.py --origem D:\citizentech\cv\video\p
 
 Na janela: espaço acrescenta um espaço, backspace apaga, `x` limpa, `q` sai.
 
-Em 15/11 esse vídeo de prova, montado com fotos públicas das letras D, E, D e O, produziu o texto `dedo`. Não é filmagem do Pedro. O vídeo anotado ficou em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`.
+Em 15/11 esse vídeo de prova, montado com fotos públicas das letras D, E, D e O, produziu o texto `dedo`. Não é filmagem do Pedro. Em 16/11 o peso da segunda amostra repetiu o texto `dedo`. O vídeo anotado desta conferência ficou em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.
 
-## Quando houver vídeo do celular
+## Vídeos do celular
 
-Um arquivo por letra, mão direita, sem rosto. Exemplo:
-
-```powershell
-python D:\citizentech\cv\repo\scripts\ingerir_video.py --video D:\citizentech\cv\video\pedro\d.mp4 --letra d
-```
-
-Os quadros vão para `D:\citizentech\cv\data\raw\pedro`. A letra do rótulo é a do argumento. A caixa é a do detector. Quadro sem mão cai em `revisar`.
+Os clipes de 16/11 estão em `D:\citizentech\cv\video\pedro`. `scripts/preparar_pedro.py` separa o trecho estável, guarda uma amostra no treino e deixa o fim de cada clipe para o teste. Um arquivo novo, uma letra por nome, entra pelo mesmo script.
