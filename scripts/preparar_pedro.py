@@ -27,24 +27,30 @@ NOMES = ["a", "b", "c", "d", "e", "i", "l", "m", "n", "o", "r", "s", "u", "v", "
 COPIAS = [
     ("a.mov", "a.mov"),
     ("b.mov", "b.mov"),
-    ("c.mov", "c_1.mov"),
     ("c (2).mov", "c_2.mov"),
-    ("e.mov", "e.mov"),
-    ("d.mov", "d.mov"),
     ("f.mov", "f.mov"),
     ("g.mov", "g_1.mov"),
     ("g2.mov", "g_2.mov"),
     ("h.mov", "h.mov"),
     ("i.mov", "i.mov"),
     ("l.mov", "l.mov"),
-    ("m.mov", "m.mov"),
-    ("n.mov", "n.mov"),
-    ("o.mov", "o.mov"),
+    ("A1.mov", "a1.mov"),
+    ("A2.mov", "a2.mov"),
+    ("E1.mov", "e1.mov"),
+    ("E2.mov", "e2.mov"),
+    ("M.mov", "m_vivo.mov"),
+    ("N.mov", "n_vivo.mov"),
     ("r.mov", "r.mov"),
-    ("s.mov", "s.mov"),
-    ("u.mov", "u.mov"),
+    ("S1 (1).mov", "s_rosto.mov"),
+    ("S1 (2).mov", "s_parede.mov"),
     ("v.mov", "v.mov"),
-    ("w.mov", "w.mov"),
+    ("E.mov", "e_parede2.mov"),
+    ("S.mov", "s_parede2.mov"),
+    ("O.mov", "o_parede2.mov"),
+    ("C.mov", "c_parede2.mov"),
+    ("D.mov", "d_parede2.mov"),
+    ("U.mov", "u_parede2.mov"),
+    ("W.mov", "w_parede2.mov"),
 ]
 
 # inicio: fração em que a letra já está estável, vista quadro a quadro.
@@ -68,6 +74,21 @@ VIDEOS_TREINO = {
     "u.mov": ("u", 0.62, "dividir"),
     "v.mov": ("v", 0.40, "dividir"),
     "w.mov": ("w", 0.40, "dividir"),
+    "a1.mov": ("a", 0.20, "treino"),
+    "a2.mov": ("a", 0.20, "teste"),
+    "e1.mov": ("e", 0.20, "treino"),
+    "e2.mov": ("e", 0.20, "teste"),
+    "m_vivo.mov": ("m", 0.20, "dividir"),
+    "n_vivo.mov": ("n", 0.20, "dividir"),
+    "s_rosto.mov": ("s", 0.30, "dividir"),
+    "s_parede.mov": ("s", 0.30, "treino"),
+    "e_parede2.mov": ("e", 0.30, "dividir"),
+    "s_parede2.mov": ("s", 0.30, "dividir"),
+    "o_parede2.mov": ("o", 0.30, "dividir"),
+    "c_parede2.mov": ("c", 0.30, "dividir"),
+    "d_parede2.mov": ("d", 0.30, "dividir"),
+    "u_parede2.mov": ("u", 0.30, "dividir"),
+    "w_parede2.mov": ("w", 0.30, "dividir"),
 }
 
 
@@ -80,11 +101,13 @@ def caixa_mao(frame: np.ndarray) -> tuple[int, int, int, int] | None:
     mascara = cv2.morphologyEx(mascara, cv2.MORPH_OPEN, nucleo)
     mascara = cv2.morphologyEx(mascara, cv2.MORPH_CLOSE, nucleo)
     contornos, _ = cv2.findContours(mascara, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    if not contornos:
+    area_minima = 0.015 * frame.shape[0] * frame.shape[1]
+    grandes = [contorno for contorno in contornos if cv2.contourArea(contorno) >= area_minima]
+    if not grandes:
         return None
-    contorno = max(contornos, key=cv2.contourArea)
-    if cv2.contourArea(contorno) < 0.015 * frame.shape[0] * frame.shape[1]:
-        return None
+    # Com o rosto no quadro, os dois blocos de pele empatam em área.
+    # A mão fica mais alta. Um bloco só continua sendo a mão.
+    contorno = min(grandes, key=lambda item: cv2.boundingRect(item)[1])
     x, y, w, h = cv2.boundingRect(contorno)
     altura, largura = frame.shape[:2]
     margem_x = int(0.04 * w)
@@ -138,6 +161,8 @@ def copiar_videos() -> None:
             if not destino.exists():
                 raise FileNotFoundError(origem)
             continue
+        # No Windows, M.mov e m.mov são o mesmo arquivo. Não gravar o clipe
+        # novo por cima do arquivo antigo quando o destino tem outro nome.
         shutil.copy2(origem, destino)
 
 
@@ -236,7 +261,7 @@ def main() -> None:
                     desenhado = frame.copy()
                     cv2.rectangle(desenhado, (x1, y1), (x2, y2), (0, 180, 0), 3)
                     cv2.imwrite(
-                        str(REVISAO / f"{divisao}_{letra}.jpg"),
+                        str(REVISAO / f"{divisao}_{letra}_{Path(video).stem}.jpg"),
                         desenhado,
                         [int(cv2.IMWRITE_JPEG_QUALITY), 80],
                     )

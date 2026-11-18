@@ -130,4 +130,36 @@ O conjunto de teste do celular passou a 269 quadros. O peso da primeira amostra 
 
 Esse peso, copiado para `models\libras16_pedro2_yolo26n.pt`, acertou 200 de 269 (74%). Por letra: A 8/15, B 16/16, C 34/34, D 0/19, E 15/15, F 12/12, I 8/24, L 15/15, M 12/12, N 7/7, O 15/40, R 10/10, S 8/8, U 9/9, V 17/19, W 14/14. O peso da época 12 acertou 199 de 269. D ficou em zero: 14 quadros lidos como V e 5 como L. O fim do clipe de D é o indicador em pé, diferente do trecho de treino. I teve 16 erros lidos como D. O caiu de 40/40 para 15/40, com os 25 erros lidos como D.
 
-No teste público de 449 fotos, o mesmo peso ficou em precisão 0,909, recall 0,912, mAP@50 0,942 e mAP@50-95 0,821. S voltou a recall 1,00. N ficou em recall 0,515. U ficou em recall 0,333. Inferência no validador: 4,0 ms. A demo usa esse peso. No vídeo `prova_dedo.mp4` o texto continuou `dedo`. A saída anotada desta conferência está em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.
+No teste público de 449 fotos, o mesmo peso ficou em precisão 0,909, recall 0,912, mAP@50 0,942 e mAP@50-95 0,821. S voltou a recall 1,00. N ficou em recall 0,515. U ficou em recall 0,333. Inferência no validador: 4,0 ms. A demo usou esse peso. No vídeo `prova_dedo.mp4` o texto continuou `dedo`. A saída anotada desta conferência está em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.
+
+## Terceira amostra, com o rosto no quadro (17/11)
+
+Pedro refilmou A, E, M e N do jeito que usa o DroidCam: a mão à esquerda e o rosto à direita. Duas tomadas de A e de E. Uma de M e uma de N. A caixa continua na pele, e, quando há dois blocos grandes, fica o de cima, que é a mão. A1 e E1 só treinam. A2 e E2 só testam. M e N novos foram divididos no tempo. Os clipes antigos, só com a mão, continuam no conjunto.
+
+Antes deste ajuste, o peso da segunda amostra acertou 252 de 429 quadros desse teste ampliado (59%). Nos clipes novos: A2 11/40, E2 34/40, M 7/40, N 0/40.
+
+O ajuste de 12 épocas partiu de `models\libras16_pedro2_yolo26n.pt`. A validação pública escolheu a época 8 (mAP@50-95 0,830). Saída: `D:\citizentech\cv\runs\yolo26n_pedro3_e12`. Esse peso, copiado para `models\libras16_pedro3_yolo26n.pt`, acertou 380 de 429 (89%). Por letra: A 48/55, B 16/16, C 34/34, D 0/19, E 55/55, F 12/12, I 11/24, L 15/15, M 45/52, N 47/47, O 40/40, R 10/10, S 8/8, U 9/9, V 16/19, W 14/14. Nos clipes novos: A2 39/40, E2 40/40, M 33/40, N 40/40. Os 7 erros de M foram lidos como N. O único erro de A2 foi lido como D. A época 12 acertou 370 de 429. A demo usou a época 8. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
+
+## Quarta amostra, S com e sem rosto (17/11)
+
+O S filmado com o rosto era lido como E nos 40 quadros de teste. Chegaram dois clipes: `S1 (1)` com rosto e `S1 (2)` só com a mão, polegar cruzado na frente dos dedos. A caixa ficou na mão. O clipe da parede entrou só no treino. O clipe com rosto foi dividido: começo no treino, fim no teste.
+
+O ajuste de 12 épocas partiu de `models\libras16_pedro3_yolo26n.pt`. Saída: `D:\citizentech\cv\runs\yolo26n_pedro4_e12`. A validação pública preferiu a época 9 (mAP@50-95 0,840), que acertou 401 de 469 no celular. A época 12 acertou 405 de 469 (86%) e é a da demo (`models\libras16_pedro4_yolo26n.pt`). S com rosto: 40/40. E com rosto: 40/40. S antigo: 8/8. A com rosto caiu de 39/40 para 28/40. M com rosto ficou em 37/40. N com rosto ficou em 40/40. O das fotos antigas ficou em 30/40. D foi a 4/19. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
+
+## Quinta amostra, E S O C D na parede (17/11)
+
+Cinco clipes novos, retrato, só a mão na parede. E esconde o polegar. S cruza o polegar na frente. O fecha o círculo. C fica aberto. D sobe o indicador com os outros dedos dobrados. O começo de cada clipe treinou e o fim testou. Os arquivos antigos não foram substituídos.
+
+Antes, o peso da quarta amostra acertou 485 de 668 (73%) nesse teste. Nos clipes novos: E 0/40, quase tudo lido como S; S 40/40; O 9/40, 31 lidos como D; C 5/39, 30 lidos como O; D 26/40.
+
+O ajuste de 12 épocas partiu de `models\libras16_pedro4_yolo26n.pt`. A validação pública escolheu a época 12 (mAP@50-95 0,846). Saída: `D:\citizentech\cv\runs\yolo26n_pedro5_e12`. Esse peso, copiado para `models\libras16_pedro5_yolo26n.pt`, acertou 602 de 668 (90%). Nos clipes novos: E 35/40, S 40/40, O 40/40, C 39/39, D 33/40. Os 5 erros de E foram lidos como S. Os 7 erros de D foram lidos como E. O S com rosto e o E com rosto continuaram em 40/40. O A com rosto voltou a 36/40. O W caiu para 4/14. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
+
+## Sexta amostra, U e W na parede (17/11)
+
+Dois clipes novos, retrato, só a mão na parede. U junta indicador e médio, com o polegar cruzado. W abre três dedos, com o polegar dobrado. O começo de cada clipe treinou (18 quadros) e o fim testou (40). Os arquivos antigos de U e W não foram substituídos. O teste do celular passou a 748 quadros.
+
+Antes, `models\libras16_pedro5_yolo26n.pt` acertou 602 de 748 (80%) nesse teste. U antigo 9/9. U novo 0/40: 29 sem caixa, 9 lidos como D e 2 como V. W antigo 4/14, 10 lidos como V. W novo 0/40: 34 lidos como V, 4 como F e 2 sem caixa.
+
+O ajuste teve 4 épocas, a partir de `models\libras16_pedro5_yolo26n.pt`, salvando cada época. Saída: `D:\citizentech\cv\runs\yolo26n_pedro6_e4`. A validação pública preferiu a época 1 (mAP@50-95 0,851). No celular essa época acertou 637 de 748, com U 49/49 e W 53/54, mas D caiu para 10/59 e R para 3/10. A época 2 acertou 674 de 748 e levou o E com rosto de 40/40 para 31/40. A época 3 acertou 682 de 748, com U novo em 36/40. A época 4 (mAP@50-95 0,830) acertou 686 de 748 (92%) e é a da demo (`models\libras16_pedro6_yolo26n.pt`).
+
+Na época 4: U novo 40/40, U antigo 9/9, W novo 40/40, W antigo 13/14 (o erro lido como V). E novo 39/40 (o erro lido como S), S novo 40/40, S com rosto 40/40, E com rosto 40/40, O novo 40/40, C novo 39/39, D novo 40/40. O A com rosto caiu de 36/40 para 28/40: 5 sem caixa, 4 lidos como N e 3 como D. O D curto antigo ficou em 0/19: 14 lidos como U e 5 como V. Por letra: A 36/55, B 16/16, C 73/73, D 40/59, E 94/95, F 12/12, I 13/24, L 15/15, M 48/52, N 47/47, O 74/80, R 10/10, S 88/88, U 49/49, V 18/19, W 53/54. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.

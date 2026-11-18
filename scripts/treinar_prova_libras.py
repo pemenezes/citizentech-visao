@@ -17,6 +17,7 @@ def main() -> None:
         default=r"D:\citizentech\cv\data\processed\libras15_passos\data.yaml",
     )
     parser.add_argument("--lr0", type=float, default=0.01)
+    parser.add_argument("--save-period", type=int, default=-1)
     args = parser.parse_args()
 
     model = YOLO(args.modelo)
@@ -38,6 +39,7 @@ def main() -> None:
         pretrained=True,
         patience=args.patience,
         close_mosaic=10,
+        save_period=args.save_period,
         plots=True,
         val=True,
         verbose=True,

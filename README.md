@@ -31,7 +31,7 @@ O ambiente virtual já criado é `D:\citizentech\cv\envs\cv` (Python 3.12). PyTo
 
 ## Demo
 
-O peso desta prova está em `D:\citizentech\cv\models\libras16_pedro2_yolo26n.pt` (YOLO26n ajustado com a segunda amostra do celular). O arquivo anterior, `libras16_pedro_yolo26n.pt`, permanece no mesmo diretório. A letra só entra na palavra depois de 8 quadros, numa janela de 12, com confiança de pelo menos 0,60. Abaixo disso a tela mostra "incerto".
+O peso desta prova está em `D:\citizentech\cv\models\libras16_pedro6_yolo26n.pt` (YOLO26n ajustado com U e W filmados de novo, só a mão na parede). Os arquivos anteriores permanecem no mesmo diretório. A letra só entra na palavra depois de 8 quadros, numa janela de 12, com confiança de pelo menos 0,60. Abaixo disso a tela mostra "incerto".
 
 ```powershell
 . D:\citizentech\cv\repo\scripts\env.ps1
@@ -46,7 +46,7 @@ python D:\citizentech\cv\repo\src\demo\app.py --origem D:\citizentech\cv\video\p
 
 Na janela: espaço acrescenta um espaço, backspace apaga, `x` limpa, `q` sai.
 
-Em 15/11 esse vídeo de prova, montado com fotos públicas das letras D, E, D e O, produziu o texto `dedo`. Não é filmagem do Pedro. Em 16/11 o peso da segunda amostra repetiu o texto `dedo`. O vídeo anotado desta conferência ficou em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.
+Em 15/11 esse vídeo de prova, montado com fotos públicas das letras D, E, D e O, produziu o texto `dedo`. Não é filmagem do Pedro. Em 16/11 o peso da segunda amostra repetiu o texto `dedo`. O vídeo anotado desta conferência ficou em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`. Em 17/11 o peso da sexta amostra repetiu o texto `dedo`. O vídeo anotado ficou em `D:\citizentech\cv\video\prova_dedo_pedro6.mp4`.
 
 ## Vídeos do celular
 

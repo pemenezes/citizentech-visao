@@ -1,6 +1,6 @@
 # Escopo
 
-Status: **segue em Libras**. Em 16/11, depois da segunda amostra (D, I, V e W), o modelo acertou 200 de 269 quadros (74%) no trecho do celular que não entrou no treino. A primeira amostra tinha sido 186 de 196 (95%) num conjunto menor, sem esses clipes. O critério de 60% foi medido nessa separação, da mesma pessoa e do mesmo minuto. G continua de fora: a pose filmada é a do L. Detalhe: `docs/viabilidade.md`.
+Status: **segue em Libras**. Em 17/11, depois da sexta amostra (U e W, só a mão na parede), o modelo acertou 686 de 748 quadros (92%) no trecho do celular que não entrou no treino. O U novo passou de 0/40 para 40/40 e o W novo de 0/40 para 40/40. O critério de 60% foi medido nessa separação, da mesma pessoa e do mesmo minuto. G continua de fora: a pose filmada é a do L. Detalhe: `docs/viabilidade.md`.
 
 ## Grupo
 
