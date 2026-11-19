@@ -1,4 +1,4 @@
-"""Treino do YOLO26n nas 15 letras públicas. Ajuste épocas pela linha de comando."""
+"""Treino do YOLO26. Ajuste épocas, dados e taxa pela linha de comando."""
 
 import argparse
 
@@ -12,11 +12,18 @@ def main() -> None:
     parser.add_argument("--patience", type=int, default=20)
     parser.add_argument("--modelo", default=r"D:\citizentech\cv\models\yolo26n.pt")
     parser.add_argument("--batch", type=int, default=16)
+    parser.add_argument(
+        "--data",
+        default=r"D:\citizentech\cv\data\processed\libras15_passos\data.yaml",
+    )
+    parser.add_argument("--lr0", type=float, default=0.01)
+    parser.add_argument("--save-period", type=int, default=-1)
     args = parser.parse_args()
 
     model = YOLO(args.modelo)
     model.train(
-        data=r"D:\citizentech\cv\data\processed\libras15_passos\data.yaml",
+        data=args.data,
+        lr0=args.lr0,
         epochs=args.epochs,
         imgsz=640,
         batch=args.batch,
@@ -32,6 +39,7 @@ def main() -> None:
         pretrained=True,
         patience=args.patience,
         close_mosaic=10,
+        save_period=args.save_period,
         plots=True,
         val=True,
         verbose=True,

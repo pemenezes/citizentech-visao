@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>A fase da faixa</title>
+<style>
+  @page { size: A4; margin: 16mm 16mm 18mm 16mm; }
+  body { font-family: Calibri, "Segoe UI", sans-serif; font-size: 11pt; line-height: 1.38; color: #1a1a1a; }
+  h1 { font-size: 18pt; margin: 0 0 0.2em; }
+  h2 { font-size: 13.5pt; margin: 1.15em 0 0.35em; }
+  .meta { margin: 0; color: #333; }
+  p { margin: 0.45em 0; text-align: justify; }
+  table { border-collapse: collapse; width: 100%; margin: 0.6em 0 0.3em; font-size: 10pt; }
+  th, td { border: 1px solid #444; padding: 3px 6px; text-align: left; }
+  th { background: #f2f2f2; }
+  ol { margin: 0.3em 0 0.3em 1.2em; }
+  li { margin: 0.25em 0; }
+  code { font-family: Consolas, "Segoe UI Mono", monospace; font-size: 10pt; }
+</style>
+</head>
+<body>
+
+<h1>A fase da faixa</h1>
+<p class="meta">Applied Computer Vision — Enxergando o mundo real. FIAP, Global Solution 2026.2. 19 de novembro de 2026.</p>
+
+<h2>Integrantes</h2>
+<p>Anny Carolina, RM98295. Henrique Lima, RM551528. Pedro Menezes, RM97432.</p>
+
+<h2>Resumo</h2>
+<p id="resumo">Um pedestre na calçada e um veículo na via ocupam o mesmo cruzamento. Este trabalho mostra na tela a fase que deveria estar aberta, ABRE VIA ou PEDESTRE, com um arquivo de vídeo no lugar da câmera. O detector é o YOLO26n pré-treinado no COCO, sem treino novo. As classes contadas são pessoa, carro, moto, ônibus e caminhão. Cada câmera tem três polígonos desenhados à mão: a pintura da faixa, a via e a calçada de espera. O pé da pessoa, no centro inferior da caixa, escolhe a região. Pessoa com o pé na pintura passa a fase para PEDESTRE e a segura enquanto o pé permanecer. A volta para ABRE VIA pede 5 segundos sem pessoa na faixa e, junto, veículo na via ou ninguém na espera. Com a via aberta, o pedestre que espera só recebe a fase com a faixa livre de veículo, o verde mínimo de 5 segundos já corrido e a via vazia há 3 segundos, ou aos 20 segundos de espera. Cinco clipes da licença Pexels rodaram numa RTX 2060. O tempo medido inclui o desenho e a gravação do mp4. Londres trocou de fase: 12 segundos em PEDESTRE e 15 em ABRE VIA, a 29,9 quadros por segundo. A espera ficou em ABRE VIA nos 21 segundos, a 14,0. Esquina, faixa e trânsito ficaram em PEDESTRE o tempo inteiro, a 27,8, 32,5 e 30,3. A comparação com um operador, no piso de 60% dos quadros, ficou por fazer.</p>
+
+<h2>Introdução</h2>
+<p>O CitizenTech procura uma leitura que uma pessoa usa no dia a dia, sem um operador ao lado. Na faixa, o pedestre e quem dirige a via que cruza a pintura precisam da mesma resposta: quem passa agora. O programa escreve essa resposta na tela, quadro a quadro. Ele informa a fase. Não acende um semáforo de rua e não identifica ninguém.</p>
+<p>O problema cabe em visão computacional porque a decisão sai de caixas já conhecidas: pessoa e veículo, colocadas em regiões fixas da imagem. A câmera da prova é um arquivo. A fase é recalculada em cada quadro, com o mesmo peso e a mesma regra. Os ODS ligados a esta escolha são o 11 e o 3: a cidade e o risco de atropelamento. O sistema não guarda quadro de usuário por padrão. Os clipes e as saídas anotadas ficam no disco local, fora do Git, porque há rostos e placas.</p>
+<p>O piso combinado era simples: em pelo menos 60% dos quadros, a fase da tela coincidiria com a fase que um operador marcaria. Essa marcação não foi feita. O que o relatório apresenta são as fases que a regra produziu e a velocidade medida em cada clipe.</p>
+
+<h2>Objetivo</h2>
+<p id="objetivo">Mostrar na tela, quadro a quadro, se a fase aberta é a da via ou a do pedestre, com as contagens da faixa, da via e da espera. O piso combinado era concordar com um operador em 60% dos quadros. Essa comparação ficou por fazer.</p>
+
+<h2>Explicação técnica das ferramentas</h2>
+<p>O detector é o YOLO26n da linha Ultralytics, licença AGPL-3.0, com o peso público treinado no COCO. Não houve treino novo para este tema. A imagem de entrada é de 640 pixels e o limiar de confiança é 0,25. A placa usada na medida é uma GeForce RTX 2060. As classes que entram na conta são pessoa, carro, moto, ônibus e caminhão. As outras classes do COCO são ignoradas.</p>
+<p>O pé da pessoa é o centro inferior da caixa. Esse ponto cai na faixa, na espera ou em nenhum dos dois. O veículo usa o mesmo ponto inferior quando está sobre a pintura, e o centro da caixa quando está na via. As três regiões são polígonos desenhados à mão para cada câmera e ficam em <code>src/farol/zonas.py</code>. A máquina da fase fica em <code>src/farol/fase.py</code>. Ela começa em ABRE VIA.</p>
+<p>Pessoa na faixa muda a fase para PEDESTRE na hora e zera o relógio do verde. Essa condição fura o mínimo de 5 segundos. Com a faixa vazia de pessoas, a volta para ABRE VIA espera esses 5 segundos e ainda pede veículo na via ou uma espera vazia. No sentido contrário, com a via aberta, um pedestre na calçada só abre PEDESTRE se a faixa estiver livre de veículo, o verde mínimo já tiver corrido e a via estiver vazia há 3 segundos, ou se a espera chegar a 20 segundos. Os três tempos são parâmetros, não números medidos num semáforo real.</p>
+<p>O script <code>scripts/rodar_farol.py</code> lê o vídeo, desenha as regiões, atualiza a fase e grava um mp4. O tempo por quadro inclui a detecção, o desenho e a escrita do arquivo. Por isso o número publicado é o da ponta a ponta, não só o da rede. Quatro cenas ficaram perto de uma câmera de 30 quadros por segundo: 32,5, 30,3, 29,9 e 27,8. A cena de espera, de 23,98 quadros por segundo na origem e com a calçada cheia, ficou em 14,0.</p>
+
+<h2>Metodologia</h2>
+<ol>
+  <li>Fixar a regra antes de medir: três regiões, verde mínimo de 5 segundos, via vazia de 3 segundos e espera máxima de 20 segundos. Pessoa na pintura fura o mínimo.</li>
+  <li>Usar o peso COCO <code>yolo26n.pt</code>, em <code>D:\citizentech\cv\models</code>, sem ajuste. O ambiente é o Python 3.12 do venv em <code>D:\citizentech\cv\envs\cv</code>.</li>
+  <li>Buscar clipes de câmera parada, com uma faixa legível, pessoas e veículos grandes o bastante para a caixa. A licença é a da Pexels. Os arquivos ficam em <code>D:\citizentech\cv\video\farol</code> e não entram no Git.</li>
+  <li>Descartar o clipe sem zebra, as tomadas com a câmera em movimento, o tilt-shift e o timelapse. Nesses últimos o tempo de 5 segundos deixa de ser tempo real.</li>
+  <li>Desenhar os polígonos no tamanho do quadro de cada clipe e conferir se o quadro lido tem esse tamanho antes de rodar.</li>
+  <li>Rodar <code>scripts/rodar_farol.py --cena</code> para faixa, espera, trânsito, esquina e Londres. Guardar quadros, quadros por segundo, segundos em cada fase e a linha da fase segundo a segundo.</li>
+  <li>Tratar como conferência interna, e não como o piso de 60%, a contagem de quadros em que o próprio detector viu um pé na faixa e a fase ficou em PEDESTRE. A marca contra um operador continua em aberto.</li>
+</ol>
+<p>Para repetir: carregar <code>scripts/env.ps1</code> e chamar <code>python scripts/rodar_farol.py --cena londres</code>. As outras cenas usam o mesmo script. Os caminhos estão no README.</p>
+
+<h2>Exemplos de resultados</h2>
+<p>O clipe em que a fase troca é o de Londres, Pexels 2863232, 960×540, 30 quadros por segundo, 789 quadros, 26 segundos. Três pessoas atravessam no começo. A faixa depois fica vazia e os carros passam. A saída anotada levou 789 quadros a 29,9 por segundo. A fase ficou PEDESTRE nos primeiros 12 segundos e ABRE VIA nos 15 seguintes. Em 203 quadros havia pé de pessoa na faixa, e nesses 203 a fase segurou.</p>
+<p>Os outros quatro clipes medidos ficam numa fase só. Na espera, Pexels 2836277, a zebra está vazia, os carros passam e as pessoas ficam na calçada: ABRE VIA nos 21 segundos, a 14,0 quadros por segundo, com zero pés na faixa. Na esquina, Pexels 17526711, a zebra da frente permanece ocupada: PEDESTRE nos 55 segundos, a 27,8, com pé na faixa em 1569 de 1646 quadros. Os vãos sem gente somam cerca de 2,6 segundos e não completam o verde mínimo. Na faixa da praia, Pexels 25775484, a fase ficou PEDESTRE nos 56 segundos, a 32,5, com pé na faixa em 1385 de 1655 quadros. No cruzamento longo, Pexels 20221532, a fase ficou PEDESTRE nos 84 segundos, a 30,3, com pé na faixa em 1948 de 2510 quadros. O polígono desse clipe também cobre a faixa de trás.</p>
+
+<table>
+  <tr><th>Cena</th><th>Origem</th><th>Quadros</th><th>Quadros/s</th><th>Fase medida</th></tr>
+  <tr><td>Londres</td><td>30</td><td>789</td><td>29,9</td><td>PEDESTRE 12 s, ABRE VIA 15 s</td></tr>
+  <tr><td>Espera</td><td>23,98</td><td>503</td><td>14,0</td><td>ABRE VIA 21 s</td></tr>
+  <tr><td>Esquina</td><td>29,97</td><td>1646</td><td>27,8</td><td>PEDESTRE 55 s</td></tr>
+  <tr><td>Faixa</td><td>30</td><td>1655</td><td>32,5</td><td>PEDESTRE 56 s</td></tr>
+  <tr><td>Trânsito</td><td>29,97</td><td>2510</td><td>30,3</td><td>PEDESTRE 84 s</td></tr>
+</table>
+<p>Um quinto arquivo, uma avenida reta sem zebra, foi baixado e ficou de fora da regra. A troca de fase que o relatório afirma está só no clipe de Londres.</p>
+
+<h2>Conclusão</h2>
+<p id="conclusao">O programa lê o vídeo como se fosse a câmera e escreve a fase em todo quadro. No clipe de Londres o letreiro sai de PEDESTRE e entra em ABRE VIA depois que a faixa fica vazia de pessoas por mais que os 5 segundos do verde mínimo. Na cena de espera a via permanece aberta, com a faixa em zero e as pessoas na calçada. Na esquina, na faixa da praia e no cruzamento longo a fase permanece PEDESTRE, porque um pé continua dentro do polígono. Quatro das cinco velocidades medidas acompanham uma câmera de 30 quadros por segundo: 32,5 na faixa, 30,3 no trânsito, 29,9 em Londres e 27,8 na esquina. O clipe de 21 segundos, mais cheio, ficou em 14,0, abaixo dos 23,98 do arquivo de origem. A comparação de 60% com um operador não entrou na medida, e o relatório deixa esse piso em aberto. Os polígonos são desenhados à mão para cada câmera. Uma segunda faixa dentro do mesmo polígono, ou uma calçada tratada como pintura, segura PEDESTRE mesmo quando a zebra da frente parece vazia. O peso é o YOLO26n público do COCO. Ele não foi treinado nestas ruas. Placas e rostos ficam fora do repositório, e os vídeos permanecem no disco local, sob a licença Pexels.</p>
+
+<h2>Referências e links</h2>
+<p>Ultralytics YOLO26. AGPL-3.0. https://docs.ultralytics.com</p>
+<p>Pexels License. Os clipes 2863232, 2836277, 17526711, 25775484 e 20221532. https://www.pexels.com/license/</p>
+<p>Repositório do grupo: https://github.com/pemenezes/citizentech-visao</p>
+<p>O vídeo de entrega foi gravado em 19/11/2026. O link público ainda não está neste arquivo. O roteiro está em <code>docs/roteiro_video.md</code>.</p>
+
+</body>
+</html>

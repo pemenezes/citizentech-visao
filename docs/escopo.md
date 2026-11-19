@@ -1,6 +1,6 @@
 # Escopo
 
-Status: **em construção, teste de campo ainda pendente**. Em 15/11 à tarde o Pedro autorizou seguir e decidir o que fosse preciso. Decisão tomada: continuar o alfabeto manual de Libras e não acionar as cédulas. O critério de 60% no vídeo do celular segue aberto, porque esse vídeo ainda não chegou. Detalhe da prova: `docs/viabilidade.md`.
+Status: **farol da faixa**, entrega de 19/11/2026. O relatório está em `docs/relatorio.html`.
 
 ## Grupo
 
@@ -8,11 +8,10 @@ Status: **em construção, teste de campo ainda pendente**. Em 15/11 à tarde o 
 - Henrique Lima — RM551528
 - Pedro Menezes — RM97432
 
-Proposta, ainda sujeita ao vídeo de campo:
-
-- Cidadão: pessoas surdas e quem se comunica com elas, inclusive no caminho do assistente Luz Cidadã.
-- O que detectar: letras estáticas do alfabeto manual (datilologia, não a Libras inteira).
-- Demo: webcam ou vídeo, caixa, letra, confiança, FPS, e as letras estáveis formando palavra na tela. Sem voz.
-- Gravação própria: celular, mão direita, sem rosto. Teste com outra pessoa fica para depois; por enquanto só o Pedro sinaliza.
-
-Plano B, só se o vídeo próprio ficar abaixo do critério: leitor de cédulas do real.
+- Cidadão: pedestre na calçada e quem dirige a via que cruza a pintura.
+- O que detectar: pessoa, carro, moto, ônibus e caminhão, com o YOLO26n público do COCO, sem treino novo.
+- O que decidir: a fase `ABRE VIA` ou `PEDESTRE`, com três regiões desenhadas à mão (faixa, via e espera).
+- Demo: um vídeo no lugar da câmera. A tela mostra a fase, as três contagens e as regiões. Sem voz e sem acionar um semáforo de rua.
+- Tempos da regra: verde mínimo de 5 segundos, via vazia de 3 segundos, espera máxima de 20 segundos. Pessoa na pintura fura o mínimo.
+- Clipes: licença Pexels, câmera parada, fora do Git, em `D:\citizentech\cv\video\farol`.
+- Piso combinado: 60% dos quadros contra um operador. Essa comparação ficou por fazer. Os números do relatório são a fase produzida pela regra e os quadros por segundo medidos.

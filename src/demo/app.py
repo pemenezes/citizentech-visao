@@ -24,18 +24,24 @@ from src.soletrador import Soletrador
 
 def abrir_captura(origem: str) -> cv2.VideoCapture:
     if origem.isdigit():
-        captura = cv2.VideoCapture(int(origem), cv2.CAP_DSHOW)
+        indice = int(origem)
+        # O DroidCam entrega quadro pelo Media Foundation. O DirectShow não abre.
+        candidatos = (
+            cv2.VideoCapture(indice, cv2.CAP_MSMF),
+            cv2.VideoCapture(indice, cv2.CAP_DSHOW),
+        )
     else:
-        captura = cv2.VideoCapture(origem)
-    if not captura.isOpened():
+        candidatos = (cv2.VideoCapture(origem),)
+    for captura in candidatos:
+        if not captura.isOpened():
+            captura.release()
+            continue
+        ok, frame = captura.read()
+        if ok and frame is not None:
+            captura.set(cv2.CAP_PROP_POS_FRAMES, 0)
+            return captura
         captura.release()
-        raise RuntimeError(f"não abriu a origem {origem}")
-    ok, frame = captura.read()
-    if not ok or frame is None:
-        captura.release()
-        raise RuntimeError(f"a origem {origem} não entregou quadro")
-    captura.set(cv2.CAP_PROP_POS_FRAMES, 0)
-    return captura
+    raise RuntimeError(f"não abriu a origem {origem}")
 
 
 def ampliar(frame: np.ndarray, altura_minima: int = 480) -> np.ndarray:

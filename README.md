@@ -1,6 +1,6 @@
 # Visão computacional — CitizenTech (FIAP Global Solution 2026.2)
 
-Componente de visão do produto CitizenTech. O tema em construção é o alfabeto manual de Libras (soletração, não a língua inteira). O teste com o vídeo do celular ainda não foi feito. Ver `docs/escopo.md`.
+Componente de visão do CitizenTech. A entrega é um farol de fase para faixa de pedestre: a tela mostra `ABRE VIA` ou `PEDESTRE`. O relatório está em `docs/relatorio.html`.
 
 ## Grupo
 
@@ -23,37 +23,31 @@ No PowerShell, no início de cada sessão:
 python D:\citizentech\cv\repo\scripts\check_env.py
 ```
 
-O ambiente virtual já criado é `D:\citizentech\cv\envs\cv` (Python 3.12). PyTorch entra pelo índice CUDA 13.2, compatível com a RTX 2060 (Turing, sm_75) e com o driver instalado (CUDA 13.5).
-
-## Verificação do ambiente (15/11/2026)
-
-`scripts/check_env.py` viu a RTX 2060 (sm_75), CUDA 13.2 e um kernel executando na GPU. O teste `scripts/smoke_infer.py` carregou o `yolo26n.pt` (5,3 MB, em `D:\citizentech\cv\models`) e mediu **55,2 FPS** numa imagem sintética de 640 px. A webcam não abriu neste processo (DirectShow sem câmera utilizável). Pico de VRAM nesse teste: 52 MiB.
+O ambiente virtual já criado é `D:\citizentech\cv\envs\cv` (Python 3.12). O peso usado no farol é o YOLO26n público do COCO, em `D:\citizentech\cv\models\yolo26n.pt`. Não houve treino novo para este tema.
 
 ## Demo
 
-O peso desta prova está em `D:\citizentech\cv\models\libras15_yolo26n.pt` (YOLO26n, 15 letras, 5 épocas). A letra só entra na palavra depois de 8 quadros, numa janela de 12, com confiança de pelo menos 0,60. Abaixo disso a tela mostra "incerto".
+O script lê um vídeo, conta pessoa e veículo nas regiões da cena e grava a fase quadro a quadro. Os clipes ficam fora do Git, em `D:\citizentech\cv\video\farol`, porque há rostos e placas. A licença é a da Pexels.
 
 ```powershell
 . D:\citizentech\cv\repo\scripts\env.ps1
-python D:\citizentech\cv\repo\src\demo\app.py --origem 0 --reserva D:\citizentech\cv\video\prova_dedo.mp4
+python D:\citizentech\cv\repo\scripts\rodar_farol.py --cena londres
 ```
 
-Sem câmera, o arquivo de reserva entra no lugar. Para só gravar, sem abrir janela:
+As cenas prontas são `londres`, `espera`, `esquina`, `faixa` e `transito`. A saída padrão é `D:\citizentech\cv\video\farol\{cena}_anotada.mp4`. A tela escreve a fase e as contagens `faixa`, `via` e `espera`.
 
-```powershell
-python D:\citizentech\cv\repo\src\demo\app.py --origem D:\citizentech\cv\video\prova_dedo.mp4 --sem-janela --saida D:\citizentech\cv\video\prova_dedo_anotado.mp4
-```
+A fase começa em `ABRE VIA`. Pessoa com o pé na pintura passa para `PEDESTRE` na hora. A volta pede 5 segundos sem pessoa na faixa. Com a via aberta, quem espera na calçada só recebe a fase com a faixa livre de veículo, o verde mínimo já corrido e a via vazia há 3 segundos, ou aos 20 segundos de espera.
 
-Na janela: espaço acrescenta um espaço, backspace apaga, `x` limpa, `q` sai.
+## Medidas (19/11/2026)
 
-Em 15/11 esse vídeo de prova, montado com fotos públicas das letras D, E, D e O, produziu o texto `dedo`. Não é filmagem do Pedro. O vídeo anotado ficou em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`.
+O tempo inclui detecção, desenho e gravação do mp4, na RTX 2060.
 
-## Quando houver vídeo do celular
+| Cena | Quadros/s | Fase |
+| --- | ---: | --- |
+| londres | 29,9 | PEDESTRE 12 s, ABRE VIA 15 s |
+| espera | 14,0 | ABRE VIA 21 s |
+| esquina | 27,8 | PEDESTRE 55 s |
+| faixa | 32,5 | PEDESTRE 56 s |
+| transito | 30,3 | PEDESTRE 84 s |
 
-Um arquivo por letra, mão direita, sem rosto. Exemplo:
-
-```powershell
-python D:\citizentech\cv\repo\scripts\ingerir_video.py --video D:\citizentech\cv\video\pedro\d.mp4 --letra d
-```
-
-Os quadros vão para `D:\citizentech\cv\data\raw\pedro`. A letra do rótulo é a do argumento. A caixa é a do detector. Quadro sem mão cai em `revisar`.
+A comparação de 60% contra um operador não foi feita. O detalhe quadro a quadro está em `docs/farol_andamento.md`.

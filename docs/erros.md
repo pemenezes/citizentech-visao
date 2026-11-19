@@ -1,20 +1,13 @@
-# Erros no teste (peso YOLO26n, melhor época da rodada de 40)
+# Onde a fase engana o olho
 
-Teste de 449 fotos. Limiar 0,25. Contagem feita em 16/11 com `runs/yolo26n_e40/weights/best.pt`.
+Conferido em 18/11 e 19/11 com o mesmo peso que alimenta a regra, `yolo26n.pt`, limiar 0,25. Isto não é a comparação de 60% contra um operador.
 
-| Tipo | Quantidade |
-| --- | ---: |
-| Sem caixa | 23 |
-| Letra trocada | 10 |
+| Cena | O que a tela faz | Por quê |
+| --- | --- | --- |
+| trânsito | `PEDESTRE` nos 84 s | o polígono pega a faixa de trás, e um pé lá segura a fase |
+| esquina | `PEDESTRE` nos 55 s | os vãos sem gente somam cerca de 2,6 s e não vencem os 5 s |
+| faixa | `PEDESTRE` nos 56 s | a zebra não esvazia o bastante, e não há uma segunda via |
+| espera | `ABRE VIA` nos 21 s | nenhum pé entra na pintura; a calçada cheia derruba a taxa para 14,0 |
+| Londres | segura `PEDESTRE` com a faixa já em 0 | são os 5 s de verde mínimo, antes da troca |
 
-Sem caixa por letra: N 16 (todas as fotos de N do teste), I 4, M 2, U 1.
-
-Trocas: U lida como V em 8 fotos, U lida como R em 1, V lida como W em 1.
-
-Doze exemplos anotados estão em `D:\citizentech\cv\runs\erros_e40`. O que as imagens mostram:
-
-- I e M que sumiram continuam no cômodo da claraboia, com a mão inteira. O modelo não marca caixa nem com confiança baixa. Não é oclusão.
-- N do teste é outro enquadramento: a mão entra de cima, dedos para baixo, bem perto da lente. As 16 fotos dessa letra ficaram sem caixa. O treino quase não viu esse ângulo.
-- U e V se confundem porque a diferença é dedos juntos ou separados. W entra na mesma família.
-
-Causa provável e correção: incluir no treino o ângulo de cima das letras N, I e M, e mais pares U/V/W com as duas mãos. O dataset público não separa pessoas, então o vídeo do celular continua sendo o teste que importa.
+Uma calçada desenhada por cima da pintura conta quem espera como se estivesse atravessando. Um polígono largo demais faz o mesmo com a faixa de trás. Os dois casos deixam o letreiro em `PEDESTRE` com a zebra da frente vazia. A correção é o polígono, não a regra dos 5 segundos.

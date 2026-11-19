@@ -7,7 +7,7 @@ from pathlib import Path
 
 from ultralytics import YOLO
 
-PESOS_PADRAO = Path(r"D:\citizentech\cv\models\libras15_yolo26n.pt")
+PESOS_PADRAO = Path(r"D:\citizentech\cv\models\libras16_pedro6_yolo26n.pt")
 
 
 class Detector:
