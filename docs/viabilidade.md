@@ -1,165 +1,23 @@
-# Prova de viabilidade — alfabeto manual de Libras
+# Prova de viabilidade — farol da faixa
 
-**Recomendação: NO-GO para congelar o tema agora. O plano B (cédulas) não entra ainda.**
+**Recomendação: o tema da entrega é o farol.** Data: 19/11/2026.
 
-O critério combinado era acerto de pelo menos 60% num vídeo do Pedro, depois de misturar uma amostra dele no treino. Esse vídeo não existe. O número alto abaixo é da mesma mão e do mesmo cômodo do dataset público, não do celular.
+O grupo trocou a demo ao vivo de letras por uma fase de faixa lida em vídeo de internet. A câmera da prova é o arquivo. A regra foi combinada antes da medida e não foi alterada depois: verde mínimo de 5 segundos, via vazia de 3 segundos, espera máxima de 20 segundos, e pessoa na pintura fura o mínimo.
 
-Status: tema **não aprovado**. `docs/escopo.md` não foi congelado.
+## O que foi medido
 
-Data da verificação: 15/11/2026.
+Peso `yolo26n.pt` do COCO, confiança 0,25, imagem 640, RTX 2060. O tempo inclui detecção, desenho e gravação do mp4.
 
-## O que o Pedro já respondeu
+- Londres, Pexels 2863232: 29,9 quadros por segundo. `PEDESTRE` 12 s e `ABRE VIA` 15 s.
+- Espera, Pexels 2836277: 14,0 quadros por segundo. `ABRE VIA` os 21 s.
+- Esquina, Pexels 17526711: 27,8. `PEDESTRE` os 55 s.
+- Faixa, Pexels 25775484: 32,5. `PEDESTRE` os 56 s.
+- Trânsito, Pexels 20221532: 30,3. `PEDESTRE` os 84 s.
 
-- Teste de campo com outra pessoa: por enquanto só ele sinaliza.
-- Gravação: câmera do celular, mão direita.
-- Demo: só texto na tela. Sem voz.
+## O que ficou em aberto
 
-## Letras com movimento
+O piso de 60% dos quadros contra um operador não foi marcado. Esse número não entra como resultado. A contagem de pés na faixa usa o mesmo detector que alimenta a regra. Ela mostra que a fase segurou quando o detector viu alguém na pintura. Não substitui o operador.
 
-Fonte lida: artigo “O alfabeto manual como recurso…” (doi:10.22456/2236-6385.129250). O alfabeto manual da Libras tem 27 sinais. Têm movimento apenas **H, J, K, X, Y e Z**. As estáticas são as outras, inclusive o Ç: cerca de 21, não 15.
+## O que ficou de fora
 
-A página do INES confirma que existe material oficial do alfabeto, mas o texto público que abri não descreve o movimento letra a letra.
-
-## Dataset que a decisão apontou (4.410 imagens)
-
-Página: [Alfabeto em libras, v1, validaes mos](https://universe.roboflow.com/validaes-mos/alfabeto-em-libras/dataset/1).
-
-- Existe. Versão 1, sem aumento de dados: **4.410** imagens, divisão publicada **3.087 / 882 / 441**.
-- A licença **não aparece** nessa página.
-- As 15 classes publicadas num espelho do mesmo tamanho ([Globaltec ByLab](https://universe.roboflow.com/globaltec-bylab/alfabeto-em-libras-usm1h)) são `a b c d e i l m n o r s u v w`.
-
-O conjunto baixado para o D: é o repositório [biankatpas/Brazilian-Sign-Language-Alphabet-Dataset](https://github.com/biankatpas/Brazilian-Sign-Language-Alphabet-Dataset) (MIT no arquivo `LICENSE` do código). O próprio README e o XML dizem que as fotos vieram do [ASL Alphabet no Kaggle](https://www.kaggle.com/datasets/grassknoted/asl-alphabet), cuja licença publicada é **GPL-2**. Os caminhos dentro do XML são `asl_alphabet_train`. Contagem conferida no disco: **4.410** caixas com imagem (2 XML sem JPG), 200×200, uma caixa por foto.
-
-Não é um alfabeto de Libras fotografado no Brasil. São fotos de ASL das 15 letras cuja forma a autora considerou igual à da Libras. Faltam letras estáticas que diferem da ASL, entre elas **F, G, P, Q e T**, além do Ç e das letras com movimento.
-
-### Balanceamento (caixas)
-
-| Letra | Caixas | Letra | Caixas |
-| --- | ---: | --- | ---: |
-| a | 540 | l | 150 |
-| b | 589 | m | 197 |
-| c | 502 | n | 156 |
-| d | 504 | o | 150 |
-| e | 609 | r | 154 |
-| i | 260 | s | 151 |
-|  |  | u, v, w | 150 cada |
-
-E tem cerca de quatro vezes o volume de L, O, R, S, U, V e W.
-
-### Amostra visual (uma foto do meio de cada letra)
-
-Abri A, E, M, L, R e V. Não há rosto. É a mesma mão, no mesmo cômodo (claraboia e parede branca na maior parte). A e E, nessas fotos de 200 px, parecem punhos fechados muito parecidos. Cerca de 2% das caixas encostam na borda; a área mediana da caixa é 31% da imagem.
-
-Divisão usada no treino curto, contígua por número do arquivo dentro de cada letra: treino 3.083, validação 878, teste 449. Isso evita sortear fotos vizinhas, mas **não separa pessoas**: só existe uma pessoa.
-
-## Outros conjuntos de Libras olhados e não baixados
-
-- [projeto libras, gomes](https://universe.roboflow.com/gomes-project/projeto-libras): a versão antiga v8 tem 212 imagens (bate com “cerca de 213”). A versão atual tem 2.038 imagens e mistura letras com sinais de palavra (Ajuda, Banheiro, Vacina). Licença não publicada na página.
-- [Alfabeto em libras, libras-gglhu](https://universe.roboflow.com/libras-gglhu/alfabeto-em-libras-qrvnw-te3gf): 1,7 mil imagens, 22 classes, texto diz “letras que não apresentam movimento”. Inclui F, G, P, Q, T e também K, que o artigo cita como letra com movimento. Licença não publicada. Exige chave do Roboflow, que não está no ambiente.
-- [Alfabeto de Libras, DigoTKT](https://universe.roboflow.com/digotkt/alfabeto-de-libras): 1,6 mil imagens, 17 classes, licença **CC BY 4.0**. Também sem F, P, Q, T.
-
-## Plano B — cédulas
-
-- [Cédulas de real brasileiro, Roboflow](https://universe.roboflow.com/vision-fbche/cedulas-de-real-brasileiro): 245 imagens, 6 classes (2, 5, 10, 20, 50, 100). Não tem R$ 200. Licença não publicada. O mAP de 99,5% é o número deles, num conjunto pequeno.
-- [Cédulas do Real, Kaggle](https://www.kaggle.com/datasets/karenalmeida340/cdulas-do-real): licença **MIT**, notas de 2 a 200, cerca de 9,2 GB, organizado por pastas (classificação, não caixas). Não baixei.
-
-## Treino curto (feito)
-
-YOLO26n, 5 épocas, imagem 640, lote 16, cache na RAM, semente 42, workers 0 (no Windows o lote com workers travou o processo). Pesos iniciais: `D:\citizentech\cv\models\yolo26n.pt`. Ultralytics 8.4.214, licença **AGPL-3.0** no `LICENSE` do pacote. Ollama sem modelo na GPU. VRAM de treino cerca de 2,4 GB. Tempo acumulado na `results.csv`: **369 s** (época 1: 82 s). Saída: `D:\citizentech\cv\runs\viabilidade\yolo26n_e5`.
-
-Validação (878 fotos, mesma pessoa): na época 5, precisão 0,922, recall 0,949, mAP@50 0,979, mAP@50-95 0,832.
-
-### Teste separado (449 fotos finais de cada letra, ainda a mesma pessoa)
-
-| | Precisão | Recall | mAP@50 | mAP@50-95 |
-| --- | ---: | ---: | ---: | ---: |
-| Todas | 0,915 | 0,835 | 0,956 | 0,796 |
-
-Recall por letra no teste (uma mão por foto; o recall é o acerto da letra):
-
-| Letra | Fotos | Recall | Letra | Fotos | Recall |
-| --- | ---: | ---: | --- | ---: | ---: |
-| a | 54 | 1,00 | n | 16 | **0,00** |
-| b | 60 | 0,85 | o | 15 | 1,00 |
-| c | 50 | 1,00 | r | 17 | 1,00 (precisão 0,58) |
-| d | 52 | 1,00 | s | 16 | **0,28** |
-| e | 62 | 1,00 | u | 15 | **0,39** |
-| i | 26 | 1,00 | v | 15 | 1,00 |
-| l | 15 | 1,00 | w | 15 | 1,00 |
-| m | 21 | 1,00 |  |  |  |
-
-N não foi recuperada nenhuma vez nessas 16 fotos. Com limiar 0,25, 13 delas nem geram caixa: a foto de treino `N_404` é um punho de frente, e a de teste `N_1141` é outro ângulo, dedos para baixo. A divisão por número de arquivo separou vistas diferentes, não só fotos vizinhas. S e U ficam com recall 0,28 e 0,39. R acerta as suas fotos, mas a precisão cai para 0,58. L tem mAP@50-95 de 0,34: a letra é achada, a caixa fica frouxa. A matriz está em `runs/viabilidade/yolo26n_e5_teste`.
-
-Inferência em arquivo, lote 1, 640 px, 100 fotos do teste depois de 10 de aquecimento: **49,6 FPS**, 20 ms por foto. Isso não inclui abrir a câmera. Pico de VRAM nessa medição: 506 MiB.
-
-## Rodada de 40 épocas (16/11, de manhã)
-
-Parou na época 22 por paciência 15. O melhor ponto da validação foi restaurado: precisão 0,978, recall 0,939, mAP@50 0,990, mAP@50-95 0,830, em 0,414 h. Saída: `D:\citizentech\cv\runs\yolo26n_e40`.
-
-No teste de 449 fotos, esse peso ficou em mAP@50 0,952 e mAP@50-95 0,775. O recall geral subiu de 0,835 para 0,871. S passou de recall 0,28 para 1,00. N continua em 0. U continua perto de 0,38. A demo segue com o peso das 5 épocas (`models\libras15_yolo26n.pt`), porque o mAP mais estrito do teste não melhorou.
-
-## YOLO26s no mesmo teste (16/11)
-
-Rodada de até 40 épocas, lote 8, paciência 15. Parou na época 26. O melhor ponto da validação foi a época 11: precisão 0,939, recall 0,928, mAP@50 0,989, mAP@50-95 0,829. Tempo acumulado: 2.547 s. VRAM de treino cerca de 2,4 GB. Saída: `D:\citizentech\cv\runs\yolo26s_e40`.
-
-No teste de 449 fotos, o s ficou em precisão 0,815, recall 0,846, mAP@50 0,950 e mAP@50-95 0,793. A inferência no validador foi de 7,5 ms por foto, contra 3,3 ms do n. O s recupera a letra N (recall 0,80), que o n deixou em zero, e perde precisão: marca mais letras erradas. A demo continua no n.
-
-## Baseline sem treino nas letras
-
-O mesmo YOLO26n pré-treinado no COCO, sem fine-tuning, rodou nas 449 fotos de teste (`scripts/baseline_coco.py`). Em **0** fotos o nome da classe coincidiu com a letra. Em 410 fotos houve alguma caixa: 407 vezes a classe `person`. O treino customizado é o que cria as letras.
-
-## Demo já exercitada
-
-Um vídeo montado só com fotos de teste de D, E, D e O (`D:\citizentech\cv\video\prova_dedo.mp4`) passou pela demo. O texto acumulado foi `dedo`. A saída anotada está em `D:\citizentech\cv\video\prova_dedo_anotado.mp4`. No trecho final a tela marcou cerca de 42 FPS de processamento. O começo marca menos porque a medida ainda inclui a carga do modelo.
-
-## Vídeo do celular (16/11)
-
-Os 18 clipes estão em `D:\citizentech\cv\video\pedro`. São curtos, de 2 a 12 segundos, mão direita, parede branca, sem rosto. O começo de cada clipe ainda tem a mão aberta e ficou de fora. A amostra de treino é o primeiro trecho estável. O teste é o trecho seguinte, com uma folga no meio. As duas tomadas de C foram separadas: `c_1` treina e `c_2` testa.
-
-Antes de misturar essa amostra, o YOLO26n das 40 épocas acertou 61 de 196 quadros do teste (31%). Depois do ajuste, o peso da época 9 acertou 186 de 196 (95%). Por letra: A 8/15, B 16/16, C 34/34, E 15/15, F 12/12, L 15/15, M 12/12, N 7/7, O 40/40, R 10/10, S 8/8, U 9/9, V 0/3. A validação pública preferiu a época 1, que acerta 154 de 196 (79%) no mesmo teste. A demo usa a época 9 (`models\libras16_pedro_yolo26n.pt`). No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
-
-No teste público de 449 fotos, esse peso da época 9 ficou em mAP@50 0,828. O S público caiu para recall 0,06. O ganho no celular e a perda no S das fotos antigas andam juntos.
-
-Nessa primeira amostra ficaram de fora do treino, com o arquivo guardado: `g_1` e `g_2`, porque a pose estável é a da letra L; `h`, porque é letra de movimento e o quadro parado parece U. O I daquele clipe era o indicador, e o I de Libras é o mínimo. D e W ainda não tinham vídeo.
-
-## Segunda amostra do celular (16/11, à noite)
-
-Chegaram clipes novos de D, G, I, V e W, em retrato 1080×1920. O I novo tem a ponta do dedo do lado oposto ao indicador do D, então entrou como mínimo. O V é o sinal de dois dedos e o W é três dedos para cima. O G novo continua com indicador para cima e polegar para o lado, a pose do L, e ficou de fora outra vez. H continua de fora.
-
-O conjunto de teste do celular passou a 269 quadros. O peso da primeira amostra acertou 188 de 269 (70%) nesse conjunto novo: D 0/19, I 0/24, V 1/19, W 1/14, e O ainda 40/40. O ajuste de 12 épocas, partindo de `models\libras16_pedro_yolo26n.pt`, parou com as 12 épocas completas. A validação pública escolheu a época 9 (mAP@50-95 0,851). Saída: `D:\citizentech\cv\runs\yolo26n_pedro2_e12`.
-
-Esse peso, copiado para `models\libras16_pedro2_yolo26n.pt`, acertou 200 de 269 (74%). Por letra: A 8/15, B 16/16, C 34/34, D 0/19, E 15/15, F 12/12, I 8/24, L 15/15, M 12/12, N 7/7, O 15/40, R 10/10, S 8/8, U 9/9, V 17/19, W 14/14. O peso da época 12 acertou 199 de 269. D ficou em zero: 14 quadros lidos como V e 5 como L. O fim do clipe de D é o indicador em pé, diferente do trecho de treino. I teve 16 erros lidos como D. O caiu de 40/40 para 15/40, com os 25 erros lidos como D.
-
-No teste público de 449 fotos, o mesmo peso ficou em precisão 0,909, recall 0,912, mAP@50 0,942 e mAP@50-95 0,821. S voltou a recall 1,00. N ficou em recall 0,515. U ficou em recall 0,333. Inferência no validador: 4,0 ms. A demo usou esse peso. No vídeo `prova_dedo.mp4` o texto continuou `dedo`. A saída anotada desta conferência está em `D:\citizentech\cv\video\prova_dedo_pedro2.mp4`.
-
-## Terceira amostra, com o rosto no quadro (17/11)
-
-Pedro refilmou A, E, M e N do jeito que usa o DroidCam: a mão à esquerda e o rosto à direita. Duas tomadas de A e de E. Uma de M e uma de N. A caixa continua na pele, e, quando há dois blocos grandes, fica o de cima, que é a mão. A1 e E1 só treinam. A2 e E2 só testam. M e N novos foram divididos no tempo. Os clipes antigos, só com a mão, continuam no conjunto.
-
-Antes deste ajuste, o peso da segunda amostra acertou 252 de 429 quadros desse teste ampliado (59%). Nos clipes novos: A2 11/40, E2 34/40, M 7/40, N 0/40.
-
-O ajuste de 12 épocas partiu de `models\libras16_pedro2_yolo26n.pt`. A validação pública escolheu a época 8 (mAP@50-95 0,830). Saída: `D:\citizentech\cv\runs\yolo26n_pedro3_e12`. Esse peso, copiado para `models\libras16_pedro3_yolo26n.pt`, acertou 380 de 429 (89%). Por letra: A 48/55, B 16/16, C 34/34, D 0/19, E 55/55, F 12/12, I 11/24, L 15/15, M 45/52, N 47/47, O 40/40, R 10/10, S 8/8, U 9/9, V 16/19, W 14/14. Nos clipes novos: A2 39/40, E2 40/40, M 33/40, N 40/40. Os 7 erros de M foram lidos como N. O único erro de A2 foi lido como D. A época 12 acertou 370 de 429. A demo usou a época 8. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
-
-## Quarta amostra, S com e sem rosto (17/11)
-
-O S filmado com o rosto era lido como E nos 40 quadros de teste. Chegaram dois clipes: `S1 (1)` com rosto e `S1 (2)` só com a mão, polegar cruzado na frente dos dedos. A caixa ficou na mão. O clipe da parede entrou só no treino. O clipe com rosto foi dividido: começo no treino, fim no teste.
-
-O ajuste de 12 épocas partiu de `models\libras16_pedro3_yolo26n.pt`. Saída: `D:\citizentech\cv\runs\yolo26n_pedro4_e12`. A validação pública preferiu a época 9 (mAP@50-95 0,840), que acertou 401 de 469 no celular. A época 12 acertou 405 de 469 (86%) e é a da demo (`models\libras16_pedro4_yolo26n.pt`). S com rosto: 40/40. E com rosto: 40/40. S antigo: 8/8. A com rosto caiu de 39/40 para 28/40. M com rosto ficou em 37/40. N com rosto ficou em 40/40. O das fotos antigas ficou em 30/40. D foi a 4/19. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
-
-## Quinta amostra, E S O C D na parede (17/11)
-
-Cinco clipes novos, retrato, só a mão na parede. E esconde o polegar. S cruza o polegar na frente. O fecha o círculo. C fica aberto. D sobe o indicador com os outros dedos dobrados. O começo de cada clipe treinou e o fim testou. Os arquivos antigos não foram substituídos.
-
-Antes, o peso da quarta amostra acertou 485 de 668 (73%) nesse teste. Nos clipes novos: E 0/40, quase tudo lido como S; S 40/40; O 9/40, 31 lidos como D; C 5/39, 30 lidos como O; D 26/40.
-
-O ajuste de 12 épocas partiu de `models\libras16_pedro4_yolo26n.pt`. A validação pública escolheu a época 12 (mAP@50-95 0,846). Saída: `D:\citizentech\cv\runs\yolo26n_pedro5_e12`. Esse peso, copiado para `models\libras16_pedro5_yolo26n.pt`, acertou 602 de 668 (90%). Nos clipes novos: E 35/40, S 40/40, O 40/40, C 39/39, D 33/40. Os 5 erros de E foram lidos como S. Os 7 erros de D foram lidos como E. O S com rosto e o E com rosto continuaram em 40/40. O A com rosto voltou a 36/40. O W caiu para 4/14. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
-
-## Sexta amostra, U e W na parede (17/11)
-
-Dois clipes novos, retrato, só a mão na parede. U junta indicador e médio, com o polegar cruzado. W abre três dedos, com o polegar dobrado. O começo de cada clipe treinou (18 quadros) e o fim testou (40). Os arquivos antigos de U e W não foram substituídos. O teste do celular passou a 748 quadros.
-
-Antes, `models\libras16_pedro5_yolo26n.pt` acertou 602 de 748 (80%) nesse teste. U antigo 9/9. U novo 0/40: 29 sem caixa, 9 lidos como D e 2 como V. W antigo 4/14, 10 lidos como V. W novo 0/40: 34 lidos como V, 4 como F e 2 sem caixa.
-
-O ajuste teve 4 épocas, a partir de `models\libras16_pedro5_yolo26n.pt`, salvando cada época. Saída: `D:\citizentech\cv\runs\yolo26n_pedro6_e4`. A validação pública preferiu a época 1 (mAP@50-95 0,851). No celular essa época acertou 637 de 748, com U 49/49 e W 53/54, mas D caiu para 10/59 e R para 3/10. A época 2 acertou 674 de 748 e levou o E com rosto de 40/40 para 31/40. A época 3 acertou 682 de 748, com U novo em 36/40. A época 4 (mAP@50-95 0,830) acertou 686 de 748 (92%) e é a da demo (`models\libras16_pedro6_yolo26n.pt`).
-
-Na época 4: U novo 40/40, U antigo 9/9, W novo 40/40, W antigo 13/14 (o erro lido como V). E novo 39/40 (o erro lido como S), S novo 40/40, S com rosto 40/40, E com rosto 40/40, O novo 40/40, C novo 39/39, D novo 40/40. O A com rosto caiu de 36/40 para 28/40: 5 sem caixa, 4 lidos como N e 3 como D. O D curto antigo ficou em 0/19: 14 lidos como U e 5 como V. Por letra: A 36/55, B 16/16, C 73/73, D 40/59, E 94/95, F 12/12, I 13/24, L 15/15, M 48/52, N 47/47, O 74/80, R 10/10, S 88/88, U 49/49, V 18/19, W 53/54. No vídeo `prova_dedo.mp4` o texto continuou `dedo`.
+Clipe sem zebra, câmera em movimento, tilt-shift e timelapse. Os arquivos ficam em `D:\citizentech\cv\video\farol` e fora do Git.

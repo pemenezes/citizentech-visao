@@ -1,5 +1,7 @@
 ﻿# Plano de Trabalho — Applied Computer Vision ("Enxergando o mundo real")
 
+Entrega de 19/11/2026: farol da faixa. O texto submetido está em `docs/relatorio.html`.
+
 Arquivo-fonte colado pelo Pedro em 15/11/2026. A cópia de trabalho está na conversa que originou o repositório; este arquivo marca o lugar previsto na estrutura (seção 5). Se houver divergência, vale a versão que o Pedro colou na conversa de 15/11/2026 até ele substituir este arquivo.
 
 Status de execução em 15/11/2026:

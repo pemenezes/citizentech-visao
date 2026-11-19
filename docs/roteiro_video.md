@@ -1,12 +1,10 @@
 # Roteiro do vídeo (3 a 5 minutos)
 
-Gravar a tela da demo. A câmera é o DroidCam: o celular vira a webcam do computador. Na demo, `--origem 0`. Se a imagem vier de cabeça para baixo, inverter no programa do DroidCam antes de gravar. A narração entra pelo gravador de tela, porque o mp4 da demo não tem áudio.
+Gravar a tela do player em tela cheia, só com os arquivos `*_anotada.mp4`. A narração entra pelo gravador de tela. O vídeo de entrega foi gravado em 19/11/2026. O link público ainda não está no relatório.
 
-1. **0:00–0:30.** Uma frase: soletrar uma palavra em Libras na tela, para quem não conhece o alfabeto manual. Cidadão: pessoa surda e quem conversa com ela. Não é a Libras inteira.
-2. **0:30–1:15.** O que aparece: caixa, letra, confiança, FPS e a palavra ao lado. Letra só entra depois de 8 quadros estáveis, com confiança de pelo menos 0,60. Abaixo disso, "incerto". Sem voz.
-3. **1:15–2:00.** Dados: 4410 fotos públicas, 15 letras, licença GPL-2 nas imagens. Divisão 3083 / 878 / 449. Amostra do celular por cima, com o fim de cada clipe fora do treino.
-4. **2:00–3:45.** Demo. Mostrar uma palavra fácil (por exemplo DEDO no vídeo de prova, que saiu `dedo`). Mostrar um caso difícil: N nas fotos públicas, ou V se a mão hesitar. Mostrar uma falha de propósito, sem esconder.
-5. **3:45–4:30.** Números, só os do relatório: COCO 0/449; YOLO26n mAP@50 0,952; YOLO26s 0,950 e mais lento; celular 686/748 na sexta rodada. U novo 40/40, W novo 40/40, E novo 39/40, S 40/40, O 40/40, C 39/39, D novo 40/40. Dizer que o A com rosto caiu para 28/40 e que o D curto antigo ficou em 0/19. G continua de fora.
-6. **4:30–5:00.** O que não faz: G, P, Q, T e letras de movimento. Mesma pessoa no teste do celular. Repositório: https://github.com/pemenezes/citizentech-visao
-
-O link do vídeo, quando existir, entra no README e no PDF. YouTube não listado ou Drive. Testar em aba anônima.
+1. **0:00–0:30.** Uma frase: a tela diz quem deve passar na faixa, o pedestre ou a via. O arquivo de vídeo faz o papel da câmera. A fase é decidida em cada quadro.
+2. **0:30–1:15.** O que aparece: o letreiro `ABRE VIA` ou `PEDESTRE`, as contagens faixa, via e espera, e os polígonos. O pé na pintura abre o pedestre na hora. A volta para a via espera 5 segundos com a faixa vazia de pessoas.
+3. **1:15–2:15.** `espera_anotada.mp4` do início ao fim. A faixa fica em 0, os carros passam e as pessoas esperam na calçada. A fase permanece `ABRE VIA`. Dizer que este clipe saiu a 14 quadros por segundo, abaixo da origem.
+4. **2:15–3:30.** `londres_anotada.mp4` do início ao fim, sem pausar. Três pessoas atravessam e o letreiro fica `PEDESTRE`. Quando a faixa chega a 0, explicar os 5 segundos de verde mínimo. Depois o letreiro vira `ABRE VIA` e os carros passam. Este clipe saiu a 29,9 quadros por segundo.
+5. **3:30–4:30.** Números, só os do relatório: esquina 27,8 e `PEDESTRE` os 55 segundos; faixa 32,5 e `PEDESTRE` os 56 segundos; trânsito 30,3 e `PEDESTRE` os 84 segundos. O peso é o YOLO26n do COCO, sem treino nestas ruas.
+6. **4:30–5:00.** O que não faz: não acende um semáforo de rua e não identifica pessoas. A marca de 60% contra um operador ficou por fazer. Repositório: https://github.com/pemenezes/citizentech-visao

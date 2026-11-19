@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<title>Soletrando o alfabeto manual</title>
+<title>A fase da faixa</title>
 <style>
   @page { size: A4; margin: 16mm 16mm 18mm 16mm; }
   body { font-family: Calibri, "Segoe UI", sans-serif; font-size: 11pt; line-height: 1.38; color: #1a1a1a; }
@@ -13,118 +13,70 @@
   table { border-collapse: collapse; width: 100%; margin: 0.6em 0 0.3em; font-size: 10pt; }
   th, td { border: 1px solid #444; padding: 3px 6px; text-align: left; }
   th { background: #f2f2f2; }
-  figure { margin: 0.7em 0 1em; page-break-inside: avoid; }
-  figcaption { font-size: 9.5pt; color: #333; margin-top: 0.25em; }
-  img { max-width: 100%; height: auto; }
-  .grade { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   ol { margin: 0.3em 0 0.3em 1.2em; }
   li { margin: 0.25em 0; }
+  code { font-family: Consolas, "Segoe UI Mono", monospace; font-size: 10pt; }
 </style>
 </head>
 <body>
 
-<h1>Soletrando o alfabeto manual</h1>
-<p class="meta">Applied Computer Vision — Enxergando o mundo real. FIAP, Global Solution 2026.2. 16 de novembro de 2026.</p>
+<h1>A fase da faixa</h1>
+<p class="meta">Applied Computer Vision — Enxergando o mundo real. FIAP, Global Solution 2026.2. 19 de novembro de 2026.</p>
 
 <h2>Integrantes</h2>
 <p>Anny Carolina, RM98295. Henrique Lima, RM551528. Pedro Menezes, RM97432.</p>
 
 <h2>Resumo</h2>
-<p id="resumo">Pessoas surdas e quem conversa com elas esbarram, na soletração, em um interlocutor que não conhece o alfabeto manual. Este trabalho desenha na tela a letra da mão, com caixa e confiança, e junta as letras estáveis numa palavra. O escopo é a datilologia estática, não a Libras inteira. As fotos públicas são 4410 imagens de 15 letras cuja forma coincide com a ASL, sob licença GPL-2, separadas em 3083 de treino, 878 de validação e 449 de teste. O YOLO26n treinado no COCO não acertou nenhuma dessas 449 letras. Depois do treino próprio, o YOLO26n chegou a mAP@50 de 0,952 no teste e o YOLO26s a 0,950. A inferência medida no validador foi de 3,3 ms no n e de 7,5 ms no s. No teste público, o n das 40 épocas deixou as 16 fotos de N sem caixa e leu U como V em 8 fotos. Uma amostra curta do celular, mão direita e sem rosto, mudou o acerto no trecho que não entrou no treino: de 61 para 186 quadros, em 196. A sexta rodada, com U e W novos, acertou 686 de 748 quadros, ainda acima dos 60%. A letra só entra na palavra depois de 8 quadros estáveis, com confiança de pelo menos 0,60. Abaixo disso a tela mostra incerto. Esse percentual do celular é da mesma pessoa e do mesmo minuto. G, P, Q, T e as letras de movimento continuam de fora.</p>
+<p id="resumo">Um pedestre na calçada e um veículo na via ocupam o mesmo cruzamento. Este trabalho mostra na tela a fase que deveria estar aberta, ABRE VIA ou PEDESTRE, com um arquivo de vídeo no lugar da câmera. O detector é o YOLO26n pré-treinado no COCO, sem treino novo. As classes contadas são pessoa, carro, moto, ônibus e caminhão. Cada câmera tem três polígonos desenhados à mão: a pintura da faixa, a via e a calçada de espera. O pé da pessoa, no centro inferior da caixa, escolhe a região. Pessoa com o pé na pintura passa a fase para PEDESTRE e a segura enquanto o pé permanecer. A volta para ABRE VIA pede 5 segundos sem pessoa na faixa e, junto, veículo na via ou ninguém na espera. Com a via aberta, o pedestre que espera só recebe a fase com a faixa livre de veículo, o verde mínimo de 5 segundos já corrido e a via vazia há 3 segundos, ou aos 20 segundos de espera. Cinco clipes da licença Pexels rodaram numa RTX 2060. O tempo medido inclui o desenho e a gravação do mp4. Londres trocou de fase: 12 segundos em PEDESTRE e 15 em ABRE VIA, a 29,9 quadros por segundo. A espera ficou em ABRE VIA nos 21 segundos, a 14,0. Esquina, faixa e trânsito ficaram em PEDESTRE o tempo inteiro, a 27,8, 32,5 e 30,3. A comparação com um operador, no piso de 60% dos quadros, ficou por fazer.</p>
 
 <h2>Introdução</h2>
-<p>O CitizenTech procura ferramentas que uma pessoa usa no dia a dia, sem depender de um especialista ao lado. Na conversa com alguém surdo, a soletração manual resolve nomes, endereços e palavras que não têm sinal próprio. Quem não estudou o alfabeto trava nesse ponto. Uma câmera que devolve a letra, e em seguida a palavra, encurta essa espera. O desenho na tela é uma camada leve de realidade aumentada: a caixa fica sobre a mão e o texto cresce ao lado.</p>
-<p>O problema cabe em visão computacional porque a letra estática é uma forma da mão, com uma caixa e uma classe. Não tentamos traduzir a Libras. Frases, expressões do rosto e letras que exigem movimento ficam de fora. As letras de movimento citadas na literatura usada no planejamento são H, J, K, X, Y e Z. O cidadão atendido é a pessoa surda e também quem precisa ler o que ela soletra. Os ODS ligados a esta escolha são o 10, o 4 e o 9.</p>
-<p>O grupo filmou só a mão direita, sem rosto, numa parede clara. Não há placa, endereço nem identificação de terceiros nesses clipes. O sistema informa a letra. Não decide nada no lugar da pessoa.</p>
-<p>O critério combinado foi simples: no trecho do vídeo do celular que não entra no treino, a letra da caixa mais confiante precisa coincidir com o nome do arquivo em pelo menos 60% dos quadros. Esse número não substitui o teste das fotos públicas. Os dois ficam no relatório porque um peso pode melhorar a mão filmada e piorar as fotos antigas. A amostra é da mesma pessoa, no mesmo minuto, e o texto diz isso.</p>
+<p>O CitizenTech procura uma leitura que uma pessoa usa no dia a dia, sem um operador ao lado. Na faixa, o pedestre e quem dirige a via que cruza a pintura precisam da mesma resposta: quem passa agora. O programa escreve essa resposta na tela, quadro a quadro. Ele informa a fase. Não acende um semáforo de rua e não identifica ninguém.</p>
+<p>O problema cabe em visão computacional porque a decisão sai de caixas já conhecidas: pessoa e veículo, colocadas em regiões fixas da imagem. A câmera da prova é um arquivo. A fase é recalculada em cada quadro, com o mesmo peso e a mesma regra. Os ODS ligados a esta escolha são o 11 e o 3: a cidade e o risco de atropelamento. O sistema não guarda quadro de usuário por padrão. Os clipes e as saídas anotadas ficam no disco local, fora do Git, porque há rostos e placas.</p>
+<p>O piso combinado era simples: em pelo menos 60% dos quadros, a fase da tela coincidiria com a fase que um operador marcaria. Essa marcação não foi feita. O que o relatório apresenta são as fases que a regra produziu e a velocidade medida em cada clipe.</p>
 
 <h2>Objetivo</h2>
-<p id="objetivo">Detectar letras estáticas do alfabeto manual, com caixa, classe e confiança, e acumular as letras estáveis numa palavra mostrada na tela. O aceite é acertar pelo menos 60% das letras num trecho do vídeo do celular que não tenha entrado no treino, sem síntese de voz.</p>
+<p id="objetivo">Mostrar na tela, quadro a quadro, se a fase aberta é a da via ou a do pedestre, com as contagens da faixa, da via e da espera. O piso combinado era concordar com um operador em 60% dos quadros. Essa comparação ficou por fazer.</p>
 
 <h2>Explicação técnica das ferramentas</h2>
-<p>O detector é o YOLO26, da linha Ultralytics 8.4.214, licença AGPL-3.0. Escolhemos essa família porque entrega caixa e classe no mesmo passo, cabe na RTX 2060 de 6 GB e já tem peso pré-treinado no COCO. Comparamos o n, com 2,51 milhões de parâmetros e 5,9 GFLOPs, e o s, com 9,96 milhões e 22,8 GFLOPs. Os dois foram medidos. A demo ficou no n, que é o mais rápido.</p>
-<p>O treino usa imagem de 640 pixels, precisão mista fp16, semente 42, cache na RAM e zero workers, por causa do modo de processo do Windows. A placa é uma GeForce RTX 2060, sm_75. O lote do n foi 16 e o do s foi 8. Os dois usaram cerca de 2,4 GB de VRAM. A métrica principal do teste público é o mAP@50. Também registramos mAP@50-95, precisão e recall. No celular, a métrica do critério de 60% é outra: a fração de quadros em que a classe da caixa mais confiante, com piso 0,25, é a letra do nome do arquivo.</p>
-<p>A demo está em OpenCV. Ela desenha a caixa, a letra, a confiança e o FPS. Um soletrador só aceita a letra quando ela domina 8 quadros dentro de uma janela de 12, com confiança de pelo menos 0,60. Espaço, backspace e limpar ficam no teclado. Não há síntese de voz. Os pesos, os dados e as rodadas ficam no disco D:, fora do Git. O código público está em https://github.com/pemenezes/citizentech-visao.</p>
-<p>O vocabulário do peso final tem 16 classes, nesta ordem: a, b, c, d, e, i, l, m, n, o, r, s, u, v, w e f. As 15 primeiras vêm das fotos públicas. O f entrou na primeira amostra do celular, e a cabeça do modelo ganhou uma linha nova. As fotos públicas não têm f, então o teste de 449 imagens não pontua essa classe. G não virou classe. Os clipes com esse nome mostram a pose do L, indicador para cima e polegar para o lado.</p>
-<p>A caixa dos quadros do celular não sai do detector de letras. Sai de uma máscara de pele, em HSV, contra a parede branca. O detector treinado nas fotos públicas perdia o enquadramento do Pedro, e usar a caixa dele para recortar o próprio treino repetiria esse erro. A letra do quadro é o nome do arquivo. A divisão é contígua no tempo: um trecho estável treina e o fim do clipe testa. Quadros sorteados misturariam a mesma mão nos dois lados.</p>
-<p>Durante o ajuste, a validação que escolhe o arquivo best.pt continua sendo a validação pública. O teste do celular fica guardado para a medida do critério. Por isso o best.pt pode não ser o melhor nessa medida. Na segunda rodada os dois pesos ficaram quase empatados, 200 e 199 quadros em 269, e a demo ficou com o best.pt, que também soletra dedo no vídeo de prova.</p>
+<p>O detector é o YOLO26n da linha Ultralytics, licença AGPL-3.0, com o peso público treinado no COCO. Não houve treino novo para este tema. A imagem de entrada é de 640 pixels e o limiar de confiança é 0,25. A placa usada na medida é uma GeForce RTX 2060. As classes que entram na conta são pessoa, carro, moto, ônibus e caminhão. As outras classes do COCO são ignoradas.</p>
+<p>O pé da pessoa é o centro inferior da caixa. Esse ponto cai na faixa, na espera ou em nenhum dos dois. O veículo usa o mesmo ponto inferior quando está sobre a pintura, e o centro da caixa quando está na via. As três regiões são polígonos desenhados à mão para cada câmera e ficam em <code>src/farol/zonas.py</code>. A máquina da fase fica em <code>src/farol/fase.py</code>. Ela começa em ABRE VIA.</p>
+<p>Pessoa na faixa muda a fase para PEDESTRE na hora e zera o relógio do verde. Essa condição fura o mínimo de 5 segundos. Com a faixa vazia de pessoas, a volta para ABRE VIA espera esses 5 segundos e ainda pede veículo na via ou uma espera vazia. No sentido contrário, com a via aberta, um pedestre na calçada só abre PEDESTRE se a faixa estiver livre de veículo, o verde mínimo já tiver corrido e a via estiver vazia há 3 segundos, ou se a espera chegar a 20 segundos. Os três tempos são parâmetros, não números medidos num semáforo real.</p>
+<p>O script <code>scripts/rodar_farol.py</code> lê o vídeo, desenha as regiões, atualiza a fase e grava um mp4. O tempo por quadro inclui a detecção, o desenho e a escrita do arquivo. Por isso o número publicado é o da ponta a ponta, não só o da rede. Quatro cenas ficaram perto de uma câmera de 30 quadros por segundo: 32,5, 30,3, 29,9 e 27,8. A cena de espera, de 23,98 quadros por segundo na origem e com a calçada cheia, ficou em 14,0.</p>
 
 <h2>Metodologia</h2>
 <ol>
-  <li>Conferir a GPU, o ambiente em <code>D:\citizentech\cv</code> e o peso COCO do YOLO26n. O script <code>scripts/check_env.py</code> confirmou a RTX 2060, sm_75, e um kernel na GPU. O ambiente é o Python 3.12 do venv em <code>D:\citizentech\cv\envs\cv</code>, com PyTorch 2.15.0+cu132 e Ultralytics 8.4.214.</li>
-  <li>Baixar as 4410 fotos do recorte publicado por Bianca Pasqualini. O código do repositório dela está sob MIT. As imagens, pelo caminho gravado nos XML, vêm do ASL Alphabet, licença GPL-2. Não há rosto nas amostras abertas.</li>
-  <li>Converter as caixas VOC para YOLO. A divisão é contígua pelo número do arquivo, dentro de cada letra: 70% treino, 20% validação, 10% teste. Isso deu 3083, 878 e 449 imagens. Não sorteamos quadro a quadro.</li>
-  <li>Medir o YOLO26n de COCO, sem treino nas letras, nas 449 fotos de teste.</li>
-  <li>Treinar o YOLO26n por até 40 épocas, paciência 15, e o YOLO26s nas mesmas condições de imagem, com lote 8. A semente é 42, o modo é determinístico, o cache fica na RAM, os workers são zero, a imagem é 640 e a precisão é fp16. O n usou lote 16. O n parou na época 22, com melhor validação na época 7. O s parou na época 26, com melhor validação na época 11. Os dois foram avaliados no teste congelado de 449 fotos.</li>
-  <li>Guardar exemplos de erro no teste público, com limiar 0,25.</li>
-  <li>Receber os vídeos do celular. A letra é o nome do arquivo. Os clipes ficam em <code>D:\citizentech\cv\video\pedro</code>. Descartar o começo, em que a mão ainda está aberta. A fração descartada muda por vídeo, depois de olhar o quadro em que a mão fecha a letra. A caixa sai da pele contra a parede branca. O primeiro trecho estável vai para o treino, com no máximo 18 quadros por clipe. O trecho final fica só para o teste. As duas tomadas de C foram separadas: <code>c_1</code> só treina e <code>c_2</code> só testa. G e H são copiados e não entram no yaml. Na segunda leva, D, I, V e W entraram. O G refilmado foi recusado de novo.</li>
-  <li>Ajustar o n com essa amostra pequena misturada às 3083 fotos públicas. A validação do treino continua sendo a validação pública, para não escolher o peso olhando o teste do celular. A primeira adaptação partiu do YOLO26n das 40 épocas e acrescentou a classe f. A segunda partiu do peso que acertou 186 de 196, por 12 épocas, paciência 12 e lote 16. As duas rodadas usam o mesmo yaml.</li>
-  <li>Na demo, aceitar a letra só depois da janela estável. A janela é 12 quadros, o mínimo é 8 e o limiar é 0,60. Espaço, apagar e limpar alteram o texto. Sem janela, o script grava um mp4 e imprime o texto acumulado. O vídeo de prova é montado com fotos públicas de D, E, D e O. Na conferência de 16/11, com o peso novo, esse texto foi dedo.</li>
+  <li>Fixar a regra antes de medir: três regiões, verde mínimo de 5 segundos, via vazia de 3 segundos e espera máxima de 20 segundos. Pessoa na pintura fura o mínimo.</li>
+  <li>Usar o peso COCO <code>yolo26n.pt</code>, em <code>D:\citizentech\cv\models</code>, sem ajuste. O ambiente é o Python 3.12 do venv em <code>D:\citizentech\cv\envs\cv</code>.</li>
+  <li>Buscar clipes de câmera parada, com uma faixa legível, pessoas e veículos grandes o bastante para a caixa. A licença é a da Pexels. Os arquivos ficam em <code>D:\citizentech\cv\video\farol</code> e não entram no Git.</li>
+  <li>Descartar o clipe sem zebra, as tomadas com a câmera em movimento, o tilt-shift e o timelapse. Nesses últimos o tempo de 5 segundos deixa de ser tempo real.</li>
+  <li>Desenhar os polígonos no tamanho do quadro de cada clipe e conferir se o quadro lido tem esse tamanho antes de rodar.</li>
+  <li>Rodar <code>scripts/rodar_farol.py --cena</code> para faixa, espera, trânsito, esquina e Londres. Guardar quadros, quadros por segundo, segundos em cada fase e a linha da fase segundo a segundo.</li>
+  <li>Tratar como conferência interna, e não como o piso de 60%, a contagem de quadros em que o próprio detector viu um pé na faixa e a fase ficou em PEDESTRE. A marca contra um operador continua em aberto.</li>
 </ol>
-<p>Para repetir: carregar <code>scripts/env.ps1</code>, preparar os dados com <code>scripts/preparar_prova_libras.py</code> e <code>scripts/preparar_pedro.py</code>, e treinar com <code>scripts/treinar_prova_libras.py</code>. Os caminhos estão no README.</p>
+<p>Para repetir: carregar <code>scripts/env.ps1</code> e chamar <code>python scripts/rodar_farol.py --cena londres</code>. As outras cenas usam o mesmo script. Os caminhos estão no README.</p>
 
 <h2>Exemplos de resultados</h2>
-<p>No teste público de 449 fotos, o peso de COCO não produziu nenhuma letra com o nome certo. Em 410 fotos houve alguma caixa, quase sempre da classe pessoa. O treino nas letras é o que cria o vocabulário.</p>
+<p>O clipe em que a fase troca é o de Londres, Pexels 2863232, 960×540, 30 quadros por segundo, 789 quadros, 26 segundos. Três pessoas atravessam no começo. A faixa depois fica vazia e os carros passam. A saída anotada levou 789 quadros a 29,9 por segundo. A fase ficou PEDESTRE nos primeiros 12 segundos e ABRE VIA nos 15 seguintes. Em 203 quadros havia pé de pessoa na faixa, e nesses 203 a fase segurou.</p>
+<p>Os outros quatro clipes medidos ficam numa fase só. Na espera, Pexels 2836277, a zebra está vazia, os carros passam e as pessoas ficam na calçada: ABRE VIA nos 21 segundos, a 14,0 quadros por segundo, com zero pés na faixa. Na esquina, Pexels 17526711, a zebra da frente permanece ocupada: PEDESTRE nos 55 segundos, a 27,8, com pé na faixa em 1569 de 1646 quadros. Os vãos sem gente somam cerca de 2,6 segundos e não completam o verde mínimo. Na faixa da praia, Pexels 25775484, a fase ficou PEDESTRE nos 56 segundos, a 32,5, com pé na faixa em 1385 de 1655 quadros. No cruzamento longo, Pexels 20221532, a fase ficou PEDESTRE nos 84 segundos, a 30,3, com pé na faixa em 1948 de 2510 quadros. O polígono desse clipe também cobre a faixa de trás.</p>
 
 <table>
-  <tr><th>Modelo</th><th>Precisão</th><th>Recall</th><th>mAP@50</th><th>mAP@50-95</th></tr>
-  <tr><td>COCO, sem treino nas letras</td><td colspan="4">0 letras certas em 449 fotos</td></tr>
-  <tr><td>YOLO26n, 5 épocas</td><td>0,915</td><td>0,835</td><td>0,956</td><td>0,796</td></tr>
-  <tr><td>YOLO26n, melhor ponto da rodada de 40</td><td>0,952</td><td>0,871</td><td>0,952</td><td>0,775</td></tr>
-  <tr><td>YOLO26s, melhor ponto da rodada de 40</td><td>0,815</td><td>0,846</td><td>0,950</td><td>0,793</td></tr>
-  <tr><td>YOLO26n, depois da segunda amostra do celular</td><td>0,909</td><td>0,912</td><td>0,942</td><td>0,821</td></tr>
+  <tr><th>Cena</th><th>Origem</th><th>Quadros</th><th>Quadros/s</th><th>Fase medida</th></tr>
+  <tr><td>Londres</td><td>30</td><td>789</td><td>29,9</td><td>PEDESTRE 12 s, ABRE VIA 15 s</td></tr>
+  <tr><td>Espera</td><td>23,98</td><td>503</td><td>14,0</td><td>ABRE VIA 21 s</td></tr>
+  <tr><td>Esquina</td><td>29,97</td><td>1646</td><td>27,8</td><td>PEDESTRE 55 s</td></tr>
+  <tr><td>Faixa</td><td>30</td><td>1655</td><td>32,5</td><td>PEDESTRE 56 s</td></tr>
+  <tr><td>Trânsito</td><td>29,97</td><td>2510</td><td>30,3</td><td>PEDESTRE 84 s</td></tr>
 </table>
-<p>A inferência no validador foi de 3,3 ms por foto no n e de 7,5 ms no s. O s recupera a letra N no teste público, com recall 0,80, e marca mais letras erradas. A demo permanece no n. No vídeo de prova, o texto acumulado foi dedo, com cerca de 42 FPS de processamento depois do aquecimento.</p>
-
-<figure>
-  <img src="figuras/results.png" alt="Curvas de treino do YOLO26n">
-  <figcaption>Figura 1. Curvas da rodada de até 40 épocas do YOLO26n. O treino parou na época 22. O melhor ponto da validação pública foi a época 7: precisão 0,978, recall 0,939, mAP@50 0,990, mAP@50-95 0,830.</figcaption>
-</figure>
-
-<figure>
-  <img src="figuras/confusion_matrix_normalized.png" alt="Matriz de confusão normalizada">
-  <figcaption>Figura 2. Matriz de confusão normalizada do YOLO26n na validação da mesma rodada. As trocas se concentram em letras de dedos vizinhos.</figcaption>
-</figure>
-
-<p>No teste público do n, com limiar 0,25, houve 23 fotos sem caixa e 10 com a letra trocada. Sem caixa: N 16, I 4, M 2, U 1. Trocas: U lida como V em 8, U lida como R em 1, V lida como W em 1. As 16 falhas de N são outro enquadramento, com a mão vinda de cima. I e M que sumiram estão no mesmo cômodo do treino. U e V se confundem porque a diferença é a abertura dos dedos.</p>
-
-<div class="grade">
-  <figure>
-    <img src="figuras/00_i_virou_nada.jpg" alt="Letra I sem caixa">
-    <figcaption>Figura 3. I do teste público sem caixa.</figcaption>
-  </figure>
-  <figure>
-    <img src="figuras/05_m_virou_nada.jpg" alt="Letra M sem caixa">
-    <figcaption>Figura 4. M do teste público sem caixa.</figcaption>
-  </figure>
-  <figure>
-    <img src="figuras/08_n_virou_nada.jpg" alt="Letra N sem caixa">
-    <figcaption>Figura 5. N visto de cima, sem caixa.</figcaption>
-  </figure>
-  <figure>
-    <img src="figuras/11_n_virou_nada.jpg" alt="Outra foto de N sem caixa">
-    <figcaption>Figura 6. Outra foto de N do mesmo ângulo, também sem caixa.</figcaption>
-  </figure>
-</div>
-
-<p>No celular, antes de misturar a amostra do Pedro, o n das 40 épocas acertou 61 de 196 quadros do teste (31%). Depois do ajuste, o peso da época 9 acertou 186 de 196 (95%). Por letra, nessa rodada: A 8/15, B 16/16, C 34/34, E 15/15, F 12/12, L 15/15, M 12/12, N 7/7, O 40/40, R 10/10, S 8/8, U 9/9, V 0/3. O V daquele clipe quase não tinha quadro estável. O critério de 60% foi atingido. No teste público, esse mesmo peso caiu para mAP@50 0,828, e o recall de S nas fotos antigas foi para 0,06. O ganho no celular e a perda no S público andam juntos.</p>
-<p>A segunda rodada refilmou D, I, V e W e repetiu o ajuste por 12 épocas, a partir do peso que tinha acertado 186 de 196. A validação pública escolheu a época 9, com mAP@50-95 0,851. No teste do celular, agora com 269 quadros, esse peso acertou 200 (74%). O peso anterior, medido no mesmo teste, acertou 188 (70%). Por letra: A 8/15, B 16/16, C 34/34, D 0/19, E 15/15, F 12/12, I 8/24, L 15/15, M 12/12, N 7/7, O 15/40, R 10/10, S 8/8, U 9/9, V 17/19, W 14/14. V subiu de 1/19 para 17/19 e W de 1/14 para 14/14. D ficou em zero: 14 quadros lidos como V e 5 como L. O fim desse clipe é o indicador em pé, diferente do trecho que entrou no treino. I acertou 8 de 24; os outros 16 foram lidos como D. O caiu de 40/40 para 15/40, e os 25 erros foram lidos como D. No teste público de 449 fotos, o mesmo peso ficou em precisão 0,909, recall 0,912, mAP@50 0,942 e mAP@50-95 0,821. O S público voltou a recall 1,00. O N ficou em recall 0,515 e o U em 0,333. A inferência no validador foi de 4,0 ms. O G refilmado continua com a pose do L, indicador para cima e polegar para o lado, e ficou de fora. H é letra de movimento e também ficou de fora. P, Q e T não foram filmados.</p>
-<p>A terceira rodada refilmou A, E, M e N com o rosto no quadro, do jeito que a demo é usada. A caixa ficou na mão, não no rosto. A1 e E1 só treinam; A2 e E2 só testam. Antes do ajuste, esse teste ampliado, com 429 quadros, dava 252 acertos (59%). Nos clipes novos: A2 11/40, E2 34/40, M 7/40 e N 0/40. Depois de 12 épocas, a validação pública escolheu a época 8. Esse peso acertou 380 de 429 (89%). Nos clipes novos: A2 39/40, E2 40/40, M 33/40 e N 40/40. Os 7 erros de M foram lidos como N. O único erro de A2 foi lido como D. O das fotos antigas voltou a 40/40. D continua em 0/19. No vídeo de prova o texto continuou dedo.</p>
-<p>A quarta rodada refilmou o S, uma tomada só com a mão e outra com o rosto. A da parede entrou no treino. O fim da tomada com rosto ficou no teste. Antes do ajuste, esses 40 quadros eram lidos como E, zero acertos. O peso da época 12 acertou 405 de 469 (86%). O S com rosto foi a 40/40 e o E com rosto continuou em 40/40. O A com rosto caiu de 39/40 para 28/40. M ficou em 37/40 e N em 40/40. No vídeo de prova o texto continuou dedo.</p>
-<p>A quinta rodada refilmou E, S, O, C e D só com a mão na parede. O começo de cada clipe treinou e o fim ficou no teste. Antes, o E novo era lido como S em 39 de 40, o O como D em 31 de 40 e o C como O em 30 de 39. Depois, o peso da época 12 acertou 602 de 668 (90%). E novo 35/40, S novo 40/40, O novo 40/40, C novo 39/39, D novo 33/40. O S com rosto e o E com rosto continuaram em 40/40. O A com rosto voltou a 36/40. O W caiu para 4/14. No vídeo de prova o texto continuou dedo.</p>
-<p>A sexta rodada refilmou U e W só com a mão na parede. O começo de cada clipe treinou e o fim ficou no teste. O ajuste teve 4 épocas, a partir do peso de 602 de 668, e a época foi escolhida pelo teste do celular. A validação pública preferiu a época 1 (mAP@50-95 0,851), que acertou 637 de 748 e deixou o D em 10 de 59. A época 4 (mAP@50-95 0,830) acertou 686 de 748 (92%). Antes, o U novo era 0/40, com 29 sem caixa, e o W novo era 0/40, com 34 lidos como V. Depois: U novo 40/40, W novo 40/40 e o W antigo 13/14. E novo 39/40, S novo 40/40, O novo 40/40, C novo 39/39 e D novo 40/40. O E com rosto continuou em 40/40. O A com rosto caiu de 36/40 para 28/40: 5 sem caixa, 4 lidos como N e 3 como D. O D curto antigo ficou em 0/19, 14 lidos como U e 5 como V. No vídeo de prova o texto continuou dedo.</p>
+<p>Um quinto arquivo, uma avenida reta sem zebra, foi baixado e ficou de fora da regra. A troca de fase que o relatório afirma está só no clipe de Londres.</p>
 
 <h2>Conclusão</h2>
-<p>O detector aprende as 15 letras públicas e, com uma amostra pequena da mesma mão, passa de 31% para 92% no trecho do celular que não viu no treino. A demo soletra na tela, recusa a letra instável e não usa voz. O n é suficiente para o tempo real nesta placa. O s empata no mAP@50, acha melhor a letra N das fotos públicas e custa mais que o dobro do tempo de inferência. Na sexta amostra, o U novo passou de 0 para 40 de 40 e o W novo de 0 para 40 de 40. O A com rosto caiu de 36 para 28 de 40. O critério de 60% continua atendido, com a ressalva de que é a mesma mão.</p>
-<p>As limitações são concretas. O teste do celular é a mesma pessoa, no mesmo minuto, com parede clara. Não mede outra mão nem outro dia. O S das fotos públicas piora quando o peso se aproxima do celular. G não entrou porque a pose filmada é a do L. Letras de movimento e P, Q e T continuam fora. Não há rosto nos clipes, e o sistema não guarda quadro de usuário por padrão. O próximo passo, se houver tempo de produto, é ligar o texto soletrado ao assistente Luz Cidadã, ainda com uma pessoa conferindo a palavra antes de qualquer ação.</p>
+<p id="conclusao">O programa lê o vídeo como se fosse a câmera e escreve a fase em todo quadro. No clipe de Londres o letreiro sai de PEDESTRE e entra em ABRE VIA depois que a faixa fica vazia de pessoas por mais que os 5 segundos do verde mínimo. Na cena de espera a via permanece aberta, com a faixa em zero e as pessoas na calçada. Na esquina, na faixa da praia e no cruzamento longo a fase permanece PEDESTRE, porque um pé continua dentro do polígono. Quatro das cinco velocidades medidas acompanham uma câmera de 30 quadros por segundo: 32,5 na faixa, 30,3 no trânsito, 29,9 em Londres e 27,8 na esquina. O clipe de 21 segundos, mais cheio, ficou em 14,0, abaixo dos 23,98 do arquivo de origem. A comparação de 60% com um operador não entrou na medida, e o relatório deixa esse piso em aberto. Os polígonos são desenhados à mão para cada câmera. Uma segunda faixa dentro do mesmo polígono, ou uma calçada tratada como pintura, segura PEDESTRE mesmo quando a zebra da frente parece vazia. O peso é o YOLO26n público do COCO. Ele não foi treinado nestas ruas. Placas e rostos ficam fora do repositório, e os vídeos permanecem no disco local, sob a licença Pexels.</p>
 
 <h2>Referências e links</h2>
-<p>Bianca Pasqualini. Brazilian Sign Language Alphabet Dataset. Código sob MIT. https://github.com/biankatpas/Brazilian-Sign-Language-Alphabet-Dataset</p>
-<p>Akash Nagaraj. ASL Alphabet. Imagens sob GPL-2. https://www.kaggle.com/datasets/grassknoted/asl-alphabet</p>
-<p>Mendeley Data, 10.17632/k4gs3bmx5k.5. Mesmo recorte das 15 letras.</p>
 <p>Ultralytics YOLO26. AGPL-3.0. https://docs.ultralytics.com</p>
+<p>Pexels License. Os clipes 2863232, 2836277, 17526711, 25775484 e 20221532. https://www.pexels.com/license/</p>
 <p>Repositório do grupo: https://github.com/pemenezes/citizentech-visao</p>
-<p>O vídeo de entrega ainda não tem link. O roteiro está em <code>docs/roteiro_video.md</code>.</p>
+<p>O vídeo de entrega foi gravado em 19/11/2026. O link público ainda não está neste arquivo. O roteiro está em <code>docs/roteiro_video.md</code>.</p>
 
 </body>
 </html>
